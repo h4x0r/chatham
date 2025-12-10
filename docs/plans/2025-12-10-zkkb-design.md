@@ -1,6 +1,6 @@
-# Private Kanban Design
+# ZKKB Design
 
-End-to-end encrypted kanban board with zero-knowledge membership proofs.
+Zero-Knowledge Kanban Board - End-to-end encrypted kanban board with zero-knowledge membership proofs.
 
 ## Summary
 
@@ -253,7 +253,7 @@ interface Comment {
 │     - boardId                                           │
 │     - boardKey (encrypted with invite secret)           │
 │     - inviteSecret (random, shown once)                 │
-│  3. Encode as URL: kanban://invite?data=<base64>        │
+│  3. Encode as URL: zkkb://invite?data=<base64>          │
 │  4. Show: "Send this link to your teammate"             │
 └─────────────────────────────────────────────────────────┘
                          │
@@ -337,7 +337,7 @@ Server doesn't see: who Bob is, that Alice invited him.
 ## Extension Structure
 
 ```
-private-kanban/
+zkkb/
 ├── src/
 │   ├── background/
 │   │   └── service-worker.ts
@@ -373,7 +373,7 @@ private-kanban/
 ## Backend Structure
 
 ```
-private-kanban-api/
+zkkb-api/
 ├── src/
 │   ├── index.ts
 │   ├── routes/

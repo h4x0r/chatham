@@ -1,4 +1,4 @@
-# Private Kanban Implementation Plan
+# ZKKB Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -26,7 +26,7 @@
 
 Run:
 ```bash
-cd /Users/4n6h4x0r/src/private-kanban
+cd /Users/4n6h4x0r/src/zkkb
 npm init -y
 ```
 
@@ -114,9 +114,9 @@ export default {
 ```json
 {
   "manifest_version": 3,
-  "name": "Private Kanban",
+  "name": "ZKKB",
   "version": "0.1.0",
-  "description": "End-to-end encrypted kanban board",
+  "description": "Zero-Knowledge Kanban Board - End-to-end encrypted kanban",
   "permissions": ["storage", "unlimitedStorage", "sidePanel"],
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -126,7 +126,7 @@ export default {
     "type": "module"
   },
   "action": {
-    "default_title": "Open Private Kanban"
+    "default_title": "Open ZKKB"
   },
   "icons": {
     "16": "icons/icon16.png",
@@ -181,7 +181,7 @@ mkdir -p src/sidepanel
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Private Kanban</title>
+    <title>ZKKB</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -219,8 +219,8 @@ render(<App />, document.getElementById('app')!)
 export function App() {
   return (
     <div class="p-4">
-      <h1 class="text-xl font-bold">Private Kanban</h1>
-      <p class="text-gray-600 mt-2">E2EE Kanban Board</p>
+      <h1 class="text-xl font-bold">ZKKB</h1>
+      <p class="text-gray-600 mt-2">Zero-Knowledge Kanban Board</p>
     </div>
   )
 }
@@ -255,7 +255,7 @@ chrome.sidePanel
   .catch((error) => console.error(error))
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Private Kanban installed')
+  console.log('ZKKB installed')
 })
 ```
 
@@ -609,7 +609,7 @@ export interface KeyPair {
 
 export function deriveKeys(seed: Uint8Array): KeyPair {
   // Derive private key using HKDF
-  const privateKey = hkdf(sha256, seed.slice(0, 32), undefined, 'private-kanban-x25519', 32)
+  const privateKey = hkdf(sha256, seed.slice(0, 32), undefined, 'zkkb-x25519', 32)
   const publicKey = x25519.getPublicKey(privateKey)
 
   return { publicKey, privateKey }
@@ -1395,7 +1395,7 @@ describe('database', () => {
 
   it('opens database', async () => {
     const db = await openDatabase()
-    expect(db.name).toBe('private-kanban')
+    expect(db.name).toBe('zkkb')
   })
 
   it('has required object stores', async () => {
@@ -1423,10 +1423,10 @@ Create `src/lib/storage/db.ts`:
 ```typescript
 import { openDB, deleteDB, type IDBPDatabase } from 'idb'
 
-const DB_NAME = 'private-kanban'
+const DB_NAME = 'zkkb'
 const DB_VERSION = 1
 
-export interface PrivateKanbanDB {
+export interface ZKKBDB {
   identity: {
     key: string
     value: {
@@ -1466,12 +1466,12 @@ export interface PrivateKanbanDB {
   }
 }
 
-let dbInstance: IDBPDatabase<PrivateKanbanDB> | null = null
+let dbInstance: IDBPDatabase<ZKKBDB> | null = null
 
-export async function openDatabase(): Promise<IDBPDatabase<PrivateKanbanDB>> {
+export async function openDatabase(): Promise<IDBPDatabase<ZKKBDB>> {
   if (dbInstance) return dbInstance
 
-  dbInstance = await openDB<PrivateKanbanDB>(DB_NAME, DB_VERSION, {
+  dbInstance = await openDB<ZKKBDB>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains('identity')) {
         db.createObjectStore('identity', { keyPath: 'id' })
@@ -2563,7 +2563,7 @@ git commit -m "feat: add CardModal component"
 
 This phase will be documented in a separate plan file due to length.
 
-See: `docs/plans/2025-12-10-private-kanban-backend.md`
+See: `docs/plans/2025-12-10-zkkb-backend.md`
 
 ---
 
@@ -2571,7 +2571,7 @@ See: `docs/plans/2025-12-10-private-kanban-backend.md`
 
 This phase will be documented in a separate plan file due to length.
 
-See: `docs/plans/2025-12-10-private-kanban-integration.md`
+See: `docs/plans/2025-12-10-zkkb-integration.md`
 
 ---
 
