@@ -1,0 +1,37 @@
+{
+  "name": "@zkkb/crypto",
+  "version": "0.1.0",
+  "description": "E2EE cryptographic library for ZKKB - BIP39, AES-256-GCM, X25519",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.7.0",
+    "@noble/hashes": "^1.6.0",
+    "bip39": "^3.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
+  },
+  "keywords": ["encryption", "e2ee", "aes-gcm", "x25519", "bip39", "crypto"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "directory": "packages/crypto"
+  }
+}

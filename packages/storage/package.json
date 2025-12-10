@@ -1,0 +1,35 @@
+{
+  "name": "@zkkb/storage",
+  "version": "0.1.0",
+  "description": "IndexedDB storage layer for ZKKB - identity and board persistence",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "idb": "^8.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
+  },
+  "keywords": ["zkkb", "indexeddb", "storage", "offline"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "directory": "packages/storage"
+  }
+}

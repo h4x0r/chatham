@@ -1,39 +1,27 @@
 {
   "name": "zkkb",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build",
-    "test": "vitest"
-  },
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zero-Knowledge Kanban Board - Open source cryptographic libraries",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/h4x0r/zkkb.git"
   },
-  "keywords": [],
+  "keywords": ["e2ee", "encryption", "zero-knowledge", "semaphore", "crdt"],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/h4x0r/zkkb/issues"
   },
   "homepage": "https://github.com/h4x0r/zkkb#readme",
-  "dependencies": {
-    "@preact/signals": "^2.5.1",
-    "preact": "^10.28.0"
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.10.2",
-    "@types/chrome": "^0.1.32",
-    "autoprefixer": "^10.4.22",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
-    "vite": "^7.2.7"
+    "vitest": "^2.1.0"
   }
 }

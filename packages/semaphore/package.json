@@ -1,0 +1,39 @@
+{
+  "name": "@zkkb/semaphore",
+  "version": "0.1.0",
+  "description": "Semaphore ZK proof integration for ZKKB anonymous board access",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.6.0",
+    "@semaphore-protocol/core": "^4.0.0",
+    "@semaphore-protocol/group": "^4.0.0",
+    "@semaphore-protocol/identity": "^4.0.0",
+    "@semaphore-protocol/proof": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
+  },
+  "keywords": ["zkkb", "semaphore", "zero-knowledge", "zkp", "anonymous"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "directory": "packages/semaphore"
+  }
+}

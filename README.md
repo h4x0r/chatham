@@ -1,97 +1,120 @@
 # ZKKB - Zero-Knowledge Kanban Board
 
-End-to-end encrypted kanban board with zero-knowledge membership proofs.
+Open source cryptographic libraries for building end-to-end encrypted applications with zero-knowledge proofs.
 
-## Features
+## Packages
 
-- **End-to-End Encryption**: All board content encrypted client-side with AES-256-GCM
-- **Zero-Knowledge Access**: Server cannot identify who accesses boards (Semaphore ZK proofs)
-- **Real-time Collaboration**: Automerge CRDT for conflict-free sync
-- **No Passwords**: 24-word recovery phrase (BIP39)
-- **Chrome Extension**: Side panel UI with Preact + Tailwind
+| Package | Description | npm |
+|---------|-------------|-----|
+| [@zkkb/crypto](packages/crypto) | E2EE primitives (BIP39, AES-256-GCM, X25519) | [![npm](https://img.shields.io/npm/v/@zkkb/crypto)](https://www.npmjs.com/package/@zkkb/crypto) |
+| [@zkkb/types](packages/types) | TypeScript type definitions | [![npm](https://img.shields.io/npm/v/@zkkb/types)](https://www.npmjs.com/package/@zkkb/types) |
+| [@zkkb/storage](packages/storage) | IndexedDB persistence layer | [![npm](https://img.shields.io/npm/v/@zkkb/storage)](https://www.npmjs.com/package/@zkkb/storage) |
+| [@zkkb/automerge](packages/automerge) | CRDT operations for boards | [![npm](https://img.shields.io/npm/v/@zkkb/automerge)](https://www.npmjs.com/package/@zkkb/automerge) |
+| [@zkkb/semaphore](packages/semaphore) | Zero-knowledge proof integration | [![npm](https://img.shields.io/npm/v/@zkkb/semaphore)](https://www.npmjs.com/package/@zkkb/semaphore) |
+
+## Installation
+
+```bash
+# Individual packages
+npm install @zkkb/crypto
+npm install @zkkb/semaphore
+
+# Or all packages
+npm install @zkkb/crypto @zkkb/types @zkkb/storage @zkkb/automerge @zkkb/semaphore
+```
 
 ## Quick Start
 
-```bash
-# Install dependencies
-npm install
+### Recovery Phrase & Key Derivation
 
-# Development build (watch mode)
-npm run dev
+```typescript
+import { generatePhrase, phraseToSeed, deriveKeys } from '@zkkb/crypto'
 
-# Production build
-npm run build
+// Generate 24-word recovery phrase
+const phrase = generatePhrase()
+console.log(phrase) // "abandon ability able ... zone zoo"
 
-# Run tests
-npm test
+// Derive keys from phrase
+const seed = phraseToSeed(phrase)
+const { publicKey, privateKey } = deriveKeys(seed)
 ```
 
-Load the extension in Chrome:
-1. Go to `chrome://extensions`
-2. Enable "Developer mode"
-3. Click "Load unpacked"
-4. Select the `dist/` folder
+### Encryption
+
+```typescript
+import { generateKey, encrypt, decrypt } from '@zkkb/crypto'
+
+const key = await generateKey()
+const plaintext = new TextEncoder().encode('Secret data')
+
+const { ciphertext, iv } = await encrypt(key, plaintext)
+const decrypted = await decrypt(key, ciphertext, iv)
+```
+
+### Zero-Knowledge Proofs
+
+```typescript
+import { identityFromSeed, createGroup, addMember, generateMembershipProof } from '@zkkb/semaphore'
+import { phraseToSeed } from '@zkkb/crypto'
+
+// Create identity from recovery phrase
+const seed = phraseToSeed(phrase)
+const identity = identityFromSeed(seed)
+
+// Add to group
+const group = createGroup()
+addMember(group, identity.commitment)
+
+// Generate ZK proof of membership
+const proof = await generateMembershipProof(identity, group, 'access', 'board_123')
+```
 
 ## Architecture
 
 ```mermaid
 flowchart TB
-    subgraph Extension["Chrome Extension"]
-        UI[Preact + Tailwind]
-        AM[Automerge CRDT]
-        IDB[(IndexedDB)]
-        WC[Web Crypto]
-        SEM[Semaphore ZK]
+    subgraph Public["This Repo (MIT)"]
+        crypto["@zkkb/crypto"]
+        types["@zkkb/types"]
+        storage["@zkkb/storage"]
+        automerge["@zkkb/automerge"]
+        semaphore["@zkkb/semaphore"]
     end
 
-    subgraph Cloud["Cloudflare Edge"]
-        W[Workers API]
-        DO[Durable Objects]
-        D1[(D1 Database)]
-        R2[(R2 Storage)]
+    subgraph Private["zkkb-pro (Proprietary)"]
+        extension[Chrome Extension]
+        api[Backend API]
+        sync[Sync Service]
     end
 
-    UI --> AM
-    AM --> WC
-    WC --> IDB
-    SEM --> W
-
-    Extension -->|"WebSocket + ZK Proofs"| Cloud
-    W --> D1
-    W --> R2
-    DO --> R2
+    Private -->|imports| Public
 ```
 
-## Free vs Pro
+## Development
 
-| Feature | Free | Pro |
-|---------|------|-----|
-| Local boards | Unlimited | Unlimited |
-| E2EE encryption | Yes | Yes |
-| Recovery phrase | Yes | Yes |
-| Cloud sync | - | Yes |
-| Real-time collaboration | - | Yes |
-| Board sharing | - | Yes |
-| Attachment storage | - | Yes |
-| Priority support | - | Yes |
+```bash
+# Install pnpm if needed
+npm install -g pnpm
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Run tests
+pnpm test
+```
 
 ## Documentation
 
 - [Product Requirements](docs/PRD.md)
-- [Architecture Decision Records](docs/adr/)
-- [Implementation Plans](docs/plans/)
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Platform | Chrome Extension (Manifest V3) |
-| Frontend | Preact, Tailwind CSS, Vite |
-| CRDT | Automerge |
-| Encryption | Web Crypto API, AES-256-GCM, X25519 |
-| ZK Proofs | Semaphore Protocol |
-| Backend | Cloudflare Workers, D1, R2, Durable Objects |
+- [Architecture Decisions](docs/adr/)
+- [Freemium Model](docs/FREEMIUM.md)
+- [Private Repo Setup](docs/PRIVATE_REPO_SETUP.md)
 
 ## License
 
-MIT License for core functionality. Commercial license required for cloud sync features in production. See [LICENSE](LICENSE) for details.
+All packages in this repository are licensed under the [MIT License](LICENSE).
+
+The ZKKB application (extension + backend) is proprietary and maintained in a separate private repository. See [PRIVATE_REPO_SETUP.md](docs/PRIVATE_REPO_SETUP.md) for details.
