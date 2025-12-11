@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ZKKB needs to allow board members to sync changes without the server knowing *which* member made *which* edit. This provides **activity anonymity** within a group.
+Chatham needs to allow board members to sync changes without the server knowing *which* member made *which* edit. This provides **activity anonymity** within a group.
 
 **What ZK proofs provide:**
 - Server cannot attribute specific edits to specific members
@@ -158,7 +158,7 @@ quadrantChart
     y-axis Low Ops Visibility --> High Ops Visibility
 
     quadrant-1 Impossible Zone
-    quadrant-2 ZKKB Position
+    quadrant-2 Chatham Position
     quadrant-3 Traditional Auth
     quadrant-4 Pseudonymous
 
@@ -183,6 +183,27 @@ Using Semaphore v4:
 - Groth16 proofs
 - Poseidon hash for Merkle tree
 - 20-level tree depth (1M members max)
+
+### Why ZK-SNARKs (Groth16)?
+
+Semaphore uses **ZK-SNARKs** (specifically Groth16), not ZK-STARKs:
+
+| Property | ZK-SNARKs (Groth16) | ZK-STARKs |
+|----------|---------------------|-----------|
+| Proof size | ~200 bytes ✅ | ~100KB ❌ |
+| Verification time | ~10ms ✅ | ~50ms |
+| Trusted setup | Required ⚠️ | Not required ✅ |
+| Browser performance | Excellent ✅ | Good |
+| Post-quantum secure | No ❌ | Yes ✅ |
+
+**We chose SNARKs because:**
+1. **Browser-first**: 200-byte proofs vs 100KB crucial for HTTP overhead
+2. **Fast verification**: 10ms server-side verification enables real-time sync
+3. **Mature tooling**: Semaphore's trusted setup already audited by PSE
+4. **Trade-off accepted**: Trusted setup risk < UX benefit for our use case
+5. **Network efficiency**: Every sync operation sends a proof; size matters
+
+**Trusted setup mitigation**: Semaphore's Groth16 parameters were generated through a multi-party ceremony by Privacy & Scaling Explorations (PSE), a research group at the Ethereum Foundation. The ceremony had multiple participants, so all would need to collude to compromise the setup.
 
 ### Key Derivation
 
@@ -224,6 +245,18 @@ async function verifyAccess(proof: SemaphoreProof, expectedRoot: bigint) {
 ```
 
 ## Alternatives Considered
+
+### ZK-STARKs
+
+Rejected because:
+- Proof size ~100KB (vs 200 bytes for SNARKs)
+- Slower verification (~50ms vs 10ms)
+- Network overhead unacceptable for real-time sync
+- Post-quantum security not critical for privacy use case
+- Less mature browser implementations
+- Every sync operation transmits a proof; 100KB per proof adds up quickly
+
+While STARKs offer transparency (no trusted setup) and post-quantum security, the UX impact of 500x larger proofs outweighs these benefits for our use case.
 
 ### Ring Signatures
 
