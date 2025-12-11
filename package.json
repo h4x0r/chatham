@@ -29,6 +29,7 @@
     "clean": "pnpm -r clean"
   },
   "devDependencies": {
+    "excalidraw-brute-export-cli": "^0.4.0",
     "playwright": "^1.57.0",
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"

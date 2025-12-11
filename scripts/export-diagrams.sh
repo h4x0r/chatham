@@ -1,29 +1,33 @@
 #!/bin/bash
 #
-# Export D2 diagrams to PNG
+# Export Excalidraw diagrams to PNG
 # Usage: ./scripts/export-diagrams.sh
 #
 
 set -e
 
-echo "🎨 Exporting D2 Diagrams to PNG"
+echo "🎨 Exporting Excalidraw Diagrams to PNG"
 echo ""
 
 # Export security model
-echo "📤 Exporting security-model.d2..."
-d2 docs/images/security-model.d2 docs/images/security-model.png \
-  --theme=0 \
-  --pad=20 \
-  --scale=0.5
+echo "📤 Exporting security-model.excalidraw..."
+npx excalidraw-brute-export-cli \
+  -i docs/images/security-model.excalidraw \
+  -o docs/images/security-model.png \
+  --format png \
+  --scale 2 \
+  --background 1
 echo "✅ security-model.png"
 echo ""
 
 # Export chatham house model
-echo "📤 Exporting chatham-house-model.d2..."
-d2 docs/images/chatham-house-model.d2 docs/images/chatham-house-model.png \
-  --theme=0 \
-  --pad=20 \
-  --scale=0.5
+echo "📤 Exporting chatham-house-model.excalidraw..."
+npx excalidraw-brute-export-cli \
+  -i docs/images/chatham-house-model.excalidraw \
+  -o docs/images/chatham-house-model.png \
+  --format png \
+  --scale 2 \
+  --background 1
 echo "✅ chatham-house-model.png"
 echo ""
 
