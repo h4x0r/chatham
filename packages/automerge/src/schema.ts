@@ -10,12 +10,12 @@ import type { BoardContent } from '@zkkb/types'
  * Create an empty board document
  */
 export function createEmptyBoard(name: string): Automerge.Doc<BoardContent> {
-  return Automerge.from<BoardContent>({
+  return Automerge.from({
     name,
     members: {},
     columns: [],
     cards: {},
-  })
+  } as BoardContent)
 }
 
 /**
@@ -29,7 +29,7 @@ export function initializeBoard(
   wrappedBoardKey: string,
   creatorColor: string
 ): Automerge.Doc<BoardContent> {
-  return Automerge.from<BoardContent>({
+  return Automerge.from({
     name,
     members: {
       [creatorCommitment]: {
@@ -46,5 +46,5 @@ export function initializeBoard(
       { id: crypto.randomUUID(), title: 'Done', position: 'z' },
     ],
     cards: {},
-  })
+  } as BoardContent)
 }

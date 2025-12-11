@@ -11,7 +11,11 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
@@ -22,10 +26,16 @@
     "idb": "^8.0.0"
   },
   "devDependencies": {
+    "fake-indexeddb": "^6.2.5",
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"
   },
-  "keywords": ["zkkb", "indexeddb", "storage", "offline"],
+  "keywords": [
+    "zkkb",
+    "indexeddb",
+    "storage",
+    "offline"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",

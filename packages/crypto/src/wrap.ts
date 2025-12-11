@@ -37,7 +37,7 @@ export async function wrapKey(
   const wrappingKeyRaw = hkdf(sha256, sharedSecret, undefined, 'wrap-key', 32)
   const wrappingKey = await crypto.subtle.importKey(
     'raw',
-    wrappingKeyRaw,
+    new Uint8Array(wrappingKeyRaw),
     { name: 'AES-GCM' },
     false,
     ['encrypt']
@@ -48,7 +48,7 @@ export async function wrapKey(
   const ciphertext = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     wrappingKey,
-    key
+    new Uint8Array(key)
   )
 
   return {
@@ -78,7 +78,7 @@ export async function unwrapKey(
   const wrappingKeyRaw = hkdf(sha256, sharedSecret, undefined, 'wrap-key', 32)
   const wrappingKey = await crypto.subtle.importKey(
     'raw',
-    wrappingKeyRaw,
+    new Uint8Array(wrappingKeyRaw),
     { name: 'AES-GCM' },
     false,
     ['decrypt']
@@ -86,9 +86,9 @@ export async function unwrapKey(
 
   // Decrypt the key
   const plaintext = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: wrapped.iv },
+    { name: 'AES-GCM', iv: new Uint8Array(wrapped.iv) },
     wrappingKey,
-    wrapped.ciphertext
+    new Uint8Array(wrapped.ciphertext)
   )
 
   return new Uint8Array(plaintext)

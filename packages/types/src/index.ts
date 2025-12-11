@@ -24,6 +24,14 @@ export interface Column {
 }
 
 /**
+ * A label on a card
+ */
+export interface Label {
+  text: string
+  color: string
+}
+
+/**
  * A checklist item within a card
  */
 export interface ChecklistItem {
@@ -62,7 +70,7 @@ export interface Card {
   position: string // Fractional indexing
   title: string
   description: string
-  labels: string[]
+  labels: Label[]
   dueDate: number | null
   assignee: string | null // commitment
   checklist: ChecklistItem[]
@@ -77,9 +85,10 @@ export interface Card {
  */
 export interface BoardContent {
   name: string
-  members: { [commitment: string]: BoardMember }
+  members: Record<string, BoardMember>
   columns: Column[]
-  cards: { [id: string]: Card }
+  cards: Record<string, Card>
+  [key: string]: unknown // Index signature for Automerge compatibility
 }
 
 /**

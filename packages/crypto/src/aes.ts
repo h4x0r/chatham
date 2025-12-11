@@ -18,7 +18,9 @@ export async function generateKey(): Promise<CryptoKey> {
  * Import a raw key buffer as an AES-256-GCM CryptoKey
  */
 export async function importKey(raw: Uint8Array): Promise<CryptoKey> {
-  return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, true, [
+  // Ensure we have a proper ArrayBuffer-backed Uint8Array for Web Crypto
+  const keyData = new Uint8Array(raw)
+  return crypto.subtle.importKey('raw', keyData, { name: 'AES-GCM' }, true, [
     'encrypt',
     'decrypt',
   ])
@@ -51,10 +53,11 @@ export async function encrypt(
   plaintext: Uint8Array
 ): Promise<EncryptedData> {
   const iv = crypto.getRandomValues(new Uint8Array(12))
+  // Ensure proper ArrayBuffer-backed arrays for Web Crypto
   const ciphertext = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     key,
-    plaintext
+    new Uint8Array(plaintext)
   )
   return { ciphertext: new Uint8Array(ciphertext), iv }
 }
@@ -71,10 +74,11 @@ export async function decrypt(
   ciphertext: Uint8Array,
   iv: Uint8Array
 ): Promise<Uint8Array> {
+  // Ensure proper ArrayBuffer-backed arrays for Web Crypto
   const plaintext = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: 'AES-GCM', iv: new Uint8Array(iv) },
     key,
-    ciphertext
+    new Uint8Array(ciphertext)
   )
   return new Uint8Array(plaintext)
 }

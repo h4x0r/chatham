@@ -35,7 +35,8 @@ export async function verifyMembershipProof(
   merkleRoot: bigint
 ): Promise<boolean> {
   // Verify the proof matches the expected root
-  if (proof.merkleTreeRoot !== merkleRoot) {
+  // proof.merkleTreeRoot is a string, merkleRoot is bigint
+  if (BigInt(proof.merkleTreeRoot) !== merkleRoot) {
     return false
   }
   return verifyProof(proof)

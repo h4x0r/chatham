@@ -2,85 +2,90 @@
 
 ## Overview
 
-ZKKB uses a freemium model where core functionality is free and open source, while collaboration and cloud features require a paid subscription.
+ZKKB uses a freemium model where **small team collaboration** is free, and larger teams or power users pay for Pro features. The core value proposition—end-to-end encrypted kanban with zero-knowledge proofs—is never paywalled.
+
+## Positioning
+
+> "End-to-end encrypted kanban for teams who value privacy. Free for teams up to 5."
 
 ## Feature Matrix
 
-```mermaid
-quadrantChart
-    title Feature Value vs Infrastructure Cost
-    x-axis Low Cost --> High Cost
-    y-axis Low Value --> High Value
-    quadrant-1 Premium Features
-    quadrant-2 Core Differentiators
-    quadrant-3 Basic Features
-    quadrant-4 Cost Centers
-
-    Local Boards: [0.1, 0.6]
-    E2EE Encryption: [0.1, 0.9]
-    Recovery Phrase: [0.1, 0.7]
-    Cloud Sync: [0.7, 0.85]
-    Real-time Collab: [0.9, 0.95]
-    Board Sharing: [0.6, 0.8]
-    Attachments: [0.8, 0.5]
-    Priority Support: [0.5, 0.4]
-```
+| Feature | Free | Pro |
+|---------|------|-----|
+| **Boards** | 3 | Unlimited |
+| **Members per board** | 5 | Unlimited |
+| **Total storage** | 100MB | 10GB |
+| **E2EE + ZK anonymity** | ✅ | ✅ |
+| **Real-time collaboration** | ✅ | ✅ |
+| **Cloud sync** | ✅ | ✅ |
+| **Attachments** | ✅ (10MB/file) | ✅ (100MB/file) |
+| **Labels** | 6 colors | Unlimited + custom |
+| **Due dates** | ✅ | ✅ |
+| **Comments** | ✅ | ✅ |
+| **Checklists** | ✅ | ✅ |
+| **Board history** | 30 days | Unlimited |
+| **Card templates** | ❌ | ✅ |
+| **Recurring cards** | ❌ | ✅ |
+| **Calendar view** | ❌ | ✅ |
+| **Board export** | ❌ | ✅ |
+| **Audit logs** | ❌ | ✅ |
+| **SSO/SAML** | ❌ | ✅ |
+| **Priority support** | ❌ | ✅ |
 
 ## Free Tier
 
-**Target Users**: Individuals, students, solo developers
+**Target Users**: Small teams (2-5 people), startups, open source projects, activists, journalists
 
-**Features**:
-- Unlimited local boards stored in browser IndexedDB
-- Full E2EE encryption (AES-256-GCM)
-- 24-word BIP39 recovery phrase
-- Single-user experience
-- Export boards as encrypted JSON backup
-- No account required for local-only use
+**Why It's Compelling**:
+- Full E2EE and ZK anonymity—the core differentiator
+- Real collaboration, not a crippled demo
+- 5 members is enough for most small teams
+- Unlimited boards means no artificial friction
 
-**Infrastructure Cost**: $0 (no server resources used)
+**Infrastructure Cost**: ~$0.50-2/active team/month
+- Durable Objects for WebSocket sync
+- R2 storage (minimal at 500MB cap)
+- D1 for metadata
 
 **Why Free**:
-- Zero marginal cost per user
-- Builds trust in encryption claims (auditable)
-- Grows user base for conversion
+- Small teams become advocates
+- Privacy-conscious users are vocal evangelists
+- Low marginal cost at scale
+- Upgrade trigger is natural (team growth)
 
 ## Pro Tier
 
-**Target Users**: Teams, small businesses, power users
+**Target Users**: Growing teams (6+), power users, organizations needing compliance
 
-**Price Point**: $8/user/month or $80/user/year
+**Price Point**: $8/user/month or $72/user/year (25% annual discount)
 
-**Features** (in addition to Free):
-- Real-time sync across devices
-- Board sharing with ZK-verified members
-- Collaborative editing with Automerge CRDT
-- Cloud backup (encrypted R2 storage)
-- Attachment storage (up to 10GB per board)
-- Priority email support
-- 99.9% uptime SLA
-
-**Infrastructure Cost**: ~$5-15/month base + usage
+**Upgrade Triggers**:
+1. Team grows past 5 members
+2. Need 4th board
+3. Storage exceeds 100MB
+4. Want calendar view for deadlines
+5. Require audit logs for compliance
+6. Need SSO integration
 
 **Why Paid**:
-- Requires Cloudflare Durable Objects ($5/mo minimum)
-- R2 storage costs scale with usage
-- Support overhead
-- Ongoing maintenance
+- Larger teams = more storage, more sync traffic
+- Power features require development investment
+- Audit logs require additional infrastructure
+- Support overhead scales with team size
 
 ## Enterprise Tier
 
-**Target Users**: Large organizations, compliance-focused teams
+**Target Users**: Large organizations, regulated industries
 
 **Price Point**: Custom pricing (contact sales)
 
 **Features** (in addition to Pro):
-- Self-hosted option
-- SSO/SAML integration
-- Audit logging
-- Dedicated support
-- Custom retention policies
+- Self-hosted deployment option
+- Custom data retention policies
+- Dedicated support engineer
+- SLA guarantees (99.9% uptime)
 - Volume discounts
+- On-premise key management
 
 ## Conversion Strategy
 
@@ -88,76 +93,113 @@ quadrantChart
 journey
     title User Journey to Conversion
     section Discovery
-      Find ZKKB: 5: User
-      Install Extension: 4: User
-      Create Local Board: 5: User
+      Find ZKKB via privacy community: 5: User
+      Install extension: 4: User
     section Activation
-      Use Daily for 1 Week: 4: User
-      Hit Device Limit: 2: User
-      Want to Share Board: 3: User
+      Create first board: 5: User
+      Invite 2-3 teammates: 5: User
+      Use for real project: 4: User
+    section Growth
+      Team loves privacy features: 5: User
+      Want to add 6th member: 3: User
+      See Pro prompt: 4: User
     section Conversion
-      See Pro Prompt: 3: User
-      Start Trial: 4: User
-      Experience Sync: 5: User
-      Convert to Paid: 5: User
+      Start 14-day trial: 5: User
+      Add full team: 5: User
+      Convert to paid: 5: User
 ```
 
-### Trigger Points
+### Key Insight
 
-1. **Multi-device**: User tries to access from second device
-2. **Collaboration**: User clicks "Share Board" button
-3. **Storage**: Local storage exceeds 50MB
-4. **Backup**: User wants cloud backup assurance
+The upgrade trigger is **team growth**, not feature frustration. Users aren't blocked from doing their work—they're blocked from scaling. This feels fair and natural.
 
-### Friction Reduction
-
-- 14-day free trial of Pro features
-- No credit card for trial
-- Seamless upgrade (boards auto-sync)
-- Downgrade keeps local access
-
-## Revenue Projections
-
-| Scenario | Users | Conversion | MRR |
-|----------|-------|------------|-----|
-| Conservative | 1,000 | 2% | $160 |
-| Moderate | 10,000 | 3% | $2,400 |
-| Optimistic | 50,000 | 5% | $20,000 |
-
-## Implementation Notes
+## Implementation
 
 ### Feature Gating
 
 ```typescript
 // src/lib/features.ts
-export const FEATURES = {
-  FREE: {
-    localBoards: true,
-    encryption: true,
-    recoveryPhrase: true,
-    maxLocalStorage: 50 * 1024 * 1024, // 50MB
-  },
-  PRO: {
-    cloudSync: true,
-    collaboration: true,
-    attachments: true,
-    maxAttachmentStorage: 10 * 1024 * 1024 * 1024, // 10GB
-  },
+export interface TierLimits {
+  maxBoards: number
+  maxMembersPerBoard: number
+  maxAttachmentSize: number      // bytes
+  maxTotalStorage: number        // bytes
+  historyDays: number | null     // null = unlimited
+  labelColors: number | null     // null = unlimited
+  hasCardTemplates: boolean
+  hasRecurringCards: boolean
+  hasCalendarView: boolean
+  hasBoardExport: boolean
+  hasAuditLogs: boolean
+  hasSSO: boolean
 }
 
-export function requiresPro(feature: string): boolean {
-  return feature in FEATURES.PRO
+export const FREE_TIER: TierLimits = {
+  maxBoards: 3,
+  maxMembersPerBoard: 5,
+  maxAttachmentSize: 10 * 1024 * 1024,        // 10MB
+  maxTotalStorage: 100 * 1024 * 1024,         // 100MB
+  historyDays: 30,
+  labelColors: 6,
+  hasCardTemplates: false,
+  hasRecurringCards: false,
+  hasCalendarView: false,
+  hasBoardExport: false,
+  hasAuditLogs: false,
+  hasSSO: false,
+}
+
+export const PRO_TIER: TierLimits = {
+  maxBoards: Infinity,
+  maxMembersPerBoard: Infinity,
+  maxAttachmentSize: 100 * 1024 * 1024,       // 100MB
+  maxTotalStorage: 10 * 1024 * 1024 * 1024,   // 10GB
+  historyDays: null,                          // unlimited
+  labelColors: null,                          // unlimited
+  hasCardTemplates: true,
+  hasRecurringCards: true,
+  hasCalendarView: true,
+  hasBoardExport: true,
+  hasAuditLogs: true,
+  hasSSO: true,
 }
 ```
 
 ### Upgrade Prompts
 
-Non-intrusive prompts shown when:
-- User attempts Pro feature
-- After 7 days of active Free usage
-- When storage approaches limit
+Show upgrade prompts when:
+- User tries to invite 6th member to a board
+- Attachment exceeds 10MB
+- Board storage approaches 100MB
+- User clicks on Pro feature (calendar, templates, etc.)
 
-Never:
-- Block core functionality
-- Nag repeatedly
-- Dark patterns
+**Prompt tone**: Helpful, not pushy
+> "Your team is growing! Upgrade to Pro for unlimited members and more storage. Start a free 14-day trial."
+
+**Never**:
+- Block existing functionality
+- Remove members from boards on downgrade
+- Delete data when storage limit exceeded (warn only)
+- Use dark patterns or guilt trips
+
+### Downgrade Behavior
+
+When a Pro user downgrades to Free:
+- All boards remain accessible (read-only for excess members)
+- Excess members can view but not edit until removed
+- Pro features disabled but data preserved
+- Storage soft-limit (warn, don't delete)
+- History beyond 30 days hidden but not deleted
+
+## Revenue Projections
+
+| Scenario | Free Teams | Conversion | Pro Users | MRR |
+|----------|------------|------------|-----------|-----|
+| Launch (3mo) | 100 | 5% | 25 | $200 |
+| Growth (12mo) | 2,000 | 8% | 800 | $6,400 |
+| Scale (24mo) | 10,000 | 10% | 5,000 | $40,000 |
+
+**Assumptions**:
+- Average Pro team size: 5 users
+- Privacy-focused users have higher conversion rates
+- Word-of-mouth growth from satisfied free users
