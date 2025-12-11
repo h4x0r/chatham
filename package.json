@@ -1,19 +1,27 @@
 {
-  "name": "zkkb",
+  "name": "chatham",
   "version": "0.0.0",
   "private": true,
-  "description": "Zero-Knowledge Kanban Board - Open source cryptographic libraries",
+  "description": "Chatham - Chatham House Rule for your projects. E2EE kanban with decoupled identity.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h4x0r/zkkb.git"
+    "url": "git+https://github.com/h4x0r/chatham.git"
   },
-  "keywords": ["e2ee", "encryption", "zero-knowledge", "semaphore", "crdt"],
+  "keywords": [
+    "e2ee",
+    "encryption",
+    "zero-knowledge",
+    "semaphore",
+    "crdt",
+    "chatham-house",
+    "privacy"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/h4x0r/zkkb/issues"
+    "url": "https://github.com/h4x0r/chatham/issues"
   },
-  "homepage": "https://github.com/h4x0r/zkkb#readme",
+  "homepage": "https://chatham.one",
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
@@ -21,6 +29,7 @@
     "clean": "pnpm -r clean"
   },
   "devDependencies": {
+    "playwright": "^1.57.0",
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"
   }

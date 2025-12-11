@@ -113,151 +113,45 @@ We know you're in the room — not what you say or do. **Zero-knowledge proofs**
 
 ### The Security Model
 
-<table>
-<tr>
-<th colspan="3" align="center">💻 YOUR DEVICE</th>
-</tr>
-<tr>
-<td align="center" width="33%">
-<strong>🔑 Recovery Phrase</strong><br/>
-24 words (BIP-39)
-</td>
-<td align="center" width="33%">
-<strong>🔄 Derive Seed</strong><br/>
-PBKDF2 (100k iterations)
-</td>
-<td align="center" width="33%">
-<strong>🔐 Identity Keys</strong><br/>
-• publicKey<br/>
-• privateKey<br/>
-• zkIdentity (X25519)
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center">
-<strong>🔒 BOARD ENCRYPTION</strong><br/>
-Your Data → AES-256-GCM → Encrypted Blob<br/>
-<em>(Board Key wrapped with your keys)</em>
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center" bgcolor="#f0f0f0">
-⬇️ <strong>INTERNET (Encrypted)</strong> ⬇️
-</td>
-</tr>
-<tr>
-<th colspan="3" align="center">☁️ CLOUDFLARE EDGE</th>
-</tr>
-<tr>
-<td align="center">
-<strong>D1 (Metadata)</strong><br/>
-• user IDs<br/>
-• board IDs<br/>
-• merkle roots
-</td>
-<td align="center">
-<strong>R2 (Blobs)</strong><br/>
-• encrypted board data<br/>
-• encrypted files
-</td>
-<td align="center">
-<strong>Durable Objects</strong><br/>
-• broadcast sync<br/>
-• presence tracking<br/>
-• connection mgmt
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center">
-<strong>Server sees:</strong> encrypted blobs, ZK proofs, merkle roots<br/>
-<strong>Server CANNOT see:</strong> card content, member names, file contents
-</td>
-</tr>
-</table>
+![Security Model](docs/images/security-model.png)
 
 ### Zero-Knowledge Authentication
 
-<table>
-<tr>
-<th colspan="3" align="center">🔐 PROVING MEMBERSHIP WITHOUT IDENTITY</th>
-</tr>
-<tr>
-<td colspan="3" align="center"><strong>Traditional Auth</strong></td>
-</tr>
-<tr>
-<td align="center" width="40%">
-<strong>👤 Client</strong>
-</td>
-<td align="center" width="20%">
-→<br/>"I am Alice"<br/>←<br/>"Welcome"
-</td>
-<td align="center" width="40%">
-<strong>🖥️ Server</strong><br/>
-(knows you)
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center" bgcolor="#f0f0f0"><br/></td>
-</tr>
-<tr>
-<td colspan="3" align="center"><strong>Chatham (Zero-Knowledge)</strong></td>
-</tr>
-<tr>
-<td align="center">
-<strong>👤 Client</strong>
-</td>
-<td align="center">
-→<br/>ZK Proof: "I'm in the group,<br/>but I won't say which member"<br/>←<br/>"Verified"
-</td>
-<td align="center">
-<strong>🖥️ Server</strong><br/>
-(doesn't know who)
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center">
-<em>The server verifies you're authorized WITHOUT learning your identity</em>
-</td>
-</tr>
-</table>
+```mermaid
+sequenceDiagram
+    participant C as 👤 Client
+    participant S as 🖥️ Server
+
+    Note over C,S: Traditional Auth
+    C->>S: "I am Alice"
+    S->>C: "Welcome" (server knows you)
+
+    Note over C,S: Chatham (Zero-Knowledge)
+    C->>S: ZK Proof: "I'm in the group,<br/>but won't say which member"
+    S->>C: "Verified" (server doesn't know who)
+
+    Note over C,S: The server verifies you're authorized WITHOUT learning your identity
+```
 
 ### Real-time Collaboration Flow
 
-<table>
-<tr>
-<th colspan="3" align="center">⚡ CONFLICT-FREE SYNC (CRDT)</th>
-</tr>
-<tr>
-<td align="center" width="33%">
-<strong>👩 Alice (offline)</strong><br/><br/>
-📝 Add card<br/>"Design v2"
-</td>
-<td align="center" width="33%">
-<strong>👨 Bob (online)</strong><br/><br/>
-➡️ Move card<br/>to "Done"
-</td>
-<td align="center" width="33%">
-<strong>👩‍💼 Carol</strong><br/><br/>
-✏️ Edit card<br/>description
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center">
-⬇️<br/>
-<strong>Automerge CRDT merges changes automatically</strong><br/>
-⬇️
-</td>
-</tr>
-<tr>
-<td colspan="3" align="center" bgcolor="#e8f5e9">
-<strong>✅ FINAL STATE (ALL CLIENTS)</strong><br/><br/>
-• Alice's new card appears<br/>
-• Bob's card move preserved<br/>
-• Carol's description edit included<br/>
-• <strong>No conflicts, no data loss</strong>
-</td>
-</tr>
-</table>
+```mermaid
+flowchart TB
+    A[👩 Alice offline<br/>📝 Add card 'Design v2']
+    B[👨 Bob online<br/>➡️ Move card to 'Done']
+    C[👩‍💼 Carol<br/>✏️ Edit card description]
+
+    CRDT[⚡ Automerge CRDT<br/>merges changes automatically]
+
+    Final[✅ FINAL STATE<br/>• Alice's card appears<br/>• Bob's move preserved<br/>• Carol's edit included<br/>• No conflicts!]
+
+    A --> CRDT
+    B --> CRDT
+    C --> CRDT
+    CRDT --> Final
+
+    style Final fill:#e8f5e9
+```
 
 ---
 
@@ -499,39 +393,7 @@ const isValid = await verifyProof(proof, group.root)
 
 Chatham uses a **decoupled identity architecture** that separates billing from board operations:
 
-<table>
-<tr>
-<th colspan="2" align="center">🔀 TWO SEPARATE DOMAINS</th>
-</tr>
-<tr>
-<td align="center" width="50%">
-<strong>📧 EMAIL DOMAIN</strong><br/>
-(billing)
-</td>
-<td align="center" width="50%">
-<strong>🔐 COMMITMENT DOMAIN</strong><br/>
-(boards)
-</td>
-</tr>
-<tr>
-<td valign="top">
-• Your email<br/>
-• Your tier (free/pro)<br/>
-• Payment info
-</td>
-<td valign="top">
-• Your boards<br/>
-• Your membership<br/>
-• Your activity
-</td>
-</tr>
-<tr>
-<td colspan="2" align="center" bgcolor="#fff3cd">
-<strong>⚠️ NO LINK BETWEEN THESE DOMAINS</strong><br/>
-Only your device knows both
-</td>
-</tr>
-</table>
+![Chatham House Model](docs/images/chatham-house-model.png)
 
 ### What The Server Knows
 
