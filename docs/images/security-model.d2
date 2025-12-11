@@ -1,0 +1,118 @@
+direction: down
+
+device: YOUR DEVICE {
+  style.fill: "#d0ebff"
+  style.stroke: "#1971c2"
+  style.stroke-width: 3
+
+  recovery: "🔑 Recovery Phrase" {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **Recovery Phrase**
+      24 words (BIP-39)
+    |
+  }
+
+  seed: "🔄 Derive Seed" {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **Derive Seed**
+      PBKDF2
+      100k iterations
+    |
+  }
+
+  keys: "🔐 Identity Keys" {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **Identity Keys**
+      • publicKey
+      • privateKey
+      • zkIdentity (X25519)
+    |
+  }
+
+  encryption: "🔒 Board Encryption" {
+    shape: rectangle
+    style.fill: "#fff3bf"
+
+    label: |md
+      **Board Encryption**
+      Your Data → AES-256-GCM → Encrypted Blob
+    |
+  }
+
+  recovery -> seed -> keys
+  keys -> encryption
+}
+
+internet: "🔒 INTERNET (Encrypted TLS)" {
+  shape: rectangle
+  style.fill: "#f1f3f5"
+  style.stroke: "#495057"
+  style.stroke-width: 2
+}
+
+cloud: CLOUDFLARE EDGE {
+  style.fill: "#ffe8cc"
+  style.stroke: "#fd7e14"
+  style.stroke-width: 3
+
+  d1: D1 - Metadata {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **D1 - Metadata**
+      • user IDs
+      • board IDs
+      • merkle roots
+    |
+  }
+
+  r2: R2 - Blobs {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **R2 - Blobs**
+      • encrypted board data
+      • encrypted files
+    |
+  }
+
+  do: Durable Objects {
+    shape: rectangle
+    style.fill: "#ffffff"
+
+    label: |md
+      **Durable Objects**
+      WebSocket Sync
+      • broadcast
+      • presence
+      • connection
+    |
+  }
+}
+
+warning: "❌ Server CANNOT see" {
+  shape: rectangle
+  style.fill: "#fff5f5"
+  style.stroke: "#c92a2a"
+  style.stroke-width: 2
+
+  label: |md
+    Server CANNOT see:
+    card content, member names, file contents
+  |
+}
+
+device.encryption -> internet: " "
+internet -> cloud: " "
+cloud -> warning: " "

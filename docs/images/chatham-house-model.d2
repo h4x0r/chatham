@@ -1,0 +1,81 @@
+direction: right
+
+email: "📧 EMAIL DOMAIN\n(Billing Only)" {
+  style.fill: "#e5dbff"
+  style.stroke: "#7950f2"
+  style.stroke-width: 3
+  style.font-size: 20
+
+  items: |md
+    ✓ Your email
+    ✓ Your tier (free/pro)
+    ✓ Payment info
+    ✓ Stripe customer ID
+  |
+
+  server: "Server knows:" {
+    shape: rectangle
+    style.fill: "#f8f0fc"
+    style.stroke: "#7950f2"
+    style.font-size: 18
+
+    info: |md
+      "alice@example.com
+      is a Pro customer"
+    |
+  }
+}
+
+barrier: "⚠️ NO LINK\nBETWEEN\nDOMAINS" {
+  style.fill: "#ffe3e3"
+  style.stroke: "#c92a2a"
+  style.stroke-width: 4
+  style.font-size: 22
+  style.bold: true
+
+  device: |md
+    Only your
+    device
+    knows both
+
+    🔗⛓️‍💥
+  |
+}
+
+commitment: "🔐 COMMITMENT DOMAIN\n(Boards & Activity)" {
+  style.fill: "#d3f9d8"
+  style.stroke: "#0ca678"
+  style.stroke-width: 3
+  style.font-size: 20
+
+  items: |md
+    ✓ Your boards
+    ✓ Your membership
+    ✓ Your activity
+    ✓ Encrypted content
+  |
+
+  server: "Server knows:" {
+    shape: rectangle
+    style.fill: "#ebfbee"
+    style.stroke: "#0ca678"
+    style.font-size: 18
+
+    info: |md
+      "Commitment 0x1a2b
+      owns 3 boards"
+
+      (not whose!)
+    |
+  }
+}
+
+email -> barrier: "Your device" {
+  style.stroke-dash: 3
+  style.opacity: 0.6
+}
+
+barrier -> commitment: "Your device" {
+  style.stroke-dash: 3
+  style.opacity: 0.6
+}

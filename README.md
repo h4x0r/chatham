@@ -113,41 +113,7 @@ We know you're in the room — not what you say or do. **Zero-knowledge proofs**
 
 ### The Security Model
 
-```mermaid
-flowchart TB
-    subgraph Device["💻 YOUR DEVICE"]
-        RP["🔑 Recovery Phrase<br/>24 words (BIP-39)"]
-        DS["🔄 Derive Seed<br/>PBKDF2 (100k iterations)"]
-        Keys["🔐 Identity Keys<br/>• publicKey<br/>• privateKey<br/>• zkIdentity (X25519)"]
-
-        RP --> DS --> Keys
-
-        Enc["🔒 Board Encryption<br/>Your Data → AES-256-GCM → Encrypted Blob"]
-        Keys --> Enc
-    end
-
-    Internet["═══ 🔒 INTERNET (Encrypted TLS) ═══"]
-
-    subgraph Cloud["☁️ CLOUDFLARE EDGE"]
-        D1["D1 - Metadata<br/>• user IDs<br/>• board IDs<br/>• merkle roots"]
-        R2["R2 - Blobs<br/>• encrypted board data<br/>• encrypted files"]
-        DO["Durable Objects<br/>• broadcast sync<br/>• presence tracking"]
-    end
-
-    Note["❌ Server CANNOT see:<br/>card content, member names, file contents"]
-
-    Enc --> Internet
-    Internet --> Cloud
-    Cloud --> Note
-
-    style Device fill:#d0ebff,stroke:#1971c2,stroke-width:3px
-    style Cloud fill:#ffe8cc,stroke:#fd7e14,stroke-width:3px
-    style Internet fill:#f1f3f5,stroke:#495057,stroke-width:2px
-    style Note fill:#fff5f5,stroke:#c92a2a,stroke-width:2px
-    style D1 fill:#fff
-    style R2 fill:#fff
-    style DO fill:#fff
-```
+![Security Model](docs/images/security-model.png)
 
 ### Zero-Knowledge Authentication
 
@@ -427,34 +393,7 @@ const isValid = await verifyProof(proof, group.root)
 
 Chatham uses a **decoupled identity architecture** that separates billing from board operations:
 
-```mermaid
-flowchart LR
-    subgraph Email["📧 EMAIL DOMAIN<br/>(Billing Only)"]
-        E1["✓ Your email<br/>✓ Your tier (free/pro)<br/>✓ Payment info<br/>✓ Stripe customer ID"]
-        E2["Server knows:<br/>'alice@example.com<br/>is a Pro customer'"]
-        E1 -.-> E2
-    end
-
-    subgraph Barrier["⚠️ NO LINK"]
-        B1["Only your<br/>device<br/>knows both"]
-        B2["🔗⛓️‍💥"]
-    end
-
-    subgraph Commit["🔐 COMMITMENT DOMAIN<br/>(Boards & Activity)"]
-        C1["✓ Your boards<br/>✓ Your membership<br/>✓ Your activity<br/>✓ Encrypted content"]
-        C2["Server knows:<br/>'Commitment 0x1a2b<br/>owns 3 boards'<br/>(not whose!)"]
-        C1 -.-> C2
-    end
-
-    Email -.->|Your device| Barrier
-    Barrier -.->|Your device| Commit
-
-    style Email fill:#e5dbff,stroke:#7950f2,stroke-width:3px
-    style Barrier fill:#ffe3e3,stroke:#c92a2a,stroke-width:4px
-    style Commit fill:#d3f9d8,stroke:#0ca678,stroke-width:3px
-    style E2 fill:#fff
-    style C2 fill:#fff
-```
+![Chatham House Model](docs/images/chatham-house-model.png)
 
 ### What The Server Knows
 
