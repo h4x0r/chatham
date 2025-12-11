@@ -16,8 +16,8 @@
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-features">Features</a> •
   <a href="#-how-it-works">How It Works</a> •
-  <a href="#-pricing">Pricing</a> •
-  <a href="#-documentation">Docs</a>
+  <a href="#️-privacy-model-who-sees-what">Privacy Model</a> •
+  <a href="#-pricing">Pricing</a>
 </p>
 
 ---
@@ -30,17 +30,21 @@ Traditional project management tools have full access to your data. Every card t
 
 ## The Solution
 
-ZKKB uses military-grade encryption where **the server only sees encrypted blobs**. Team members prove they belong using zero-knowledge proofs—no identity revealed, no tracking possible.
+ZKKB uses military-grade encryption where **the server only sees encrypted blobs**. When syncing changes, team members prove they belong using zero-knowledge proofs—the server knows *you're a member* but can't see *which edits are yours*.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        WHAT THE SERVER SEES                         │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
+│   Server knows:                                                     │
+│   ✓ alice@company.com is a member of board xyz                      │
+│                                                                     │
+│   Server cannot see:                                                │
 │   ❌ "Launch Q4 campaign"          →   ✓ 0x8f3a...encrypted...4b2c │
-│   ❌ "alice@company.com"           →   ✓ ZK proof (member #?)       │
 │   ❌ "Budget: $50,000"             →   ✓ [encrypted blob]           │
 │   ❌ File: strategy.pdf            →   ✓ [encrypted R2 object]      │
+│   ❌ "Alice edited card #3"        →   ✓ ZK proof (valid member)    │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -391,32 +395,91 @@ const isValid = await verifyProof(proof, group.root)
 
 ---
 
+## 👁️ Privacy Model: Who Sees What
+
+Understanding exactly what's private and what's not:
+
+### The Server Knows
+
+| Data | Visibility | Why |
+|------|------------|-----|
+| Your email | ✅ Visible | Magic link authentication |
+| Which boards you created | ✅ Visible | Ownership tracking |
+| Which boards you're a member of | ✅ Visible | Access control |
+| When you authenticate | ✅ Visible | Session management |
+| Your tier (free/pro) | ✅ Visible | Limit enforcement |
+
+### The Server Cannot See
+
+| Data | Visibility | Why |
+|------|------------|-----|
+| Board names & content | 🔒 Encrypted | AES-256-GCM, key never leaves device |
+| Card text, comments | 🔒 Encrypted | Inside encrypted board blob |
+| Column names | 🔒 Encrypted | Inside encrypted board blob |
+| Attachment contents | 🔒 Encrypted | Encrypted before upload |
+| Your display name in boards | 🔒 Encrypted | Stored in encrypted member data |
+| Who made which edit | 🔒 Anonymous | ZK proofs don't reveal identity |
+
+### What Other Board Members See
+
+| Data | Visibility | Why |
+|------|------------|-----|
+| Your display name | ✅ Visible | You choose it per-board |
+| Your avatar color | ✅ Visible | For visual identification |
+| Your edits & comments | ✅ Visible | Collaboration requires it |
+| Your email | ❌ Hidden | Never shared with members |
+| Your other boards | ❌ Hidden | Completely separate |
+
+### The ZK Proof Advantage
+
+When you sync changes to a board:
+
+```
+Traditional:  "User alice@example.com edited card #123"
+                ↓ Server logs who did what
+
+ZKKB:         "Valid member proof for board xyz" + [encrypted changes]
+                ↓ Server knows SOMEONE edited, but not WHO
+```
+
+The server can verify you're authorized without learning which member you are. This prevents building activity timelines per-user.
+
+**Bottom line:** The server knows *that* you're a member, but not *what* you do as a member. Your email is known; your activity is anonymous.
+
+---
+
 ## 🔒 Security
 
 ### What We Can't Do
 
-- ❌ Read your board contents
-- ❌ See who's on your team
-- ❌ Access your files
+- ❌ Read your board contents (encrypted client-side)
+- ❌ See what your team discusses (cards, comments, columns)
+- ❌ Access your file contents (encrypted before upload)
+- ❌ Know who made which specific edit (ZK proofs)
 - ❌ Reset your password (there is none)
 - ❌ Recover your data without your phrase
 
+### What We Can See
+
+- ✅ Your email (for authentication)
+- ✅ Which boards you're a member of
+- ✅ That activity happened (not what or by whom)
+
 ### What This Means
 
-- ✅ **Breach-proof**: Nothing useful to steal
-- ✅ **Subpoena-proof**: We have nothing to give
-- ✅ **Surveillance-proof**: Can't track who's using what
+- ✅ **Content-proof**: Board content is unreadable to us
+- ✅ **Activity-anonymous**: Can't attribute edits to users
 - ✅ **You're in control**: Your phrase = your data
 
 ### Threat Model
 
 | Threat | Mitigation |
 |--------|------------|
-| Server compromise | All data encrypted client-side |
+| Server compromise | All content encrypted client-side |
 | Man-in-the-middle | TLS + E2EE (double encryption) |
 | Malicious insider | Server has no decryption keys |
-| Legal compulsion | Nothing readable to hand over |
-| Identity tracking | ZK proofs reveal nothing |
+| Legal compulsion | Content is unreadable; only metadata (emails, board IDs) |
+| Activity tracking | ZK proofs prevent attributing edits to specific users |
 
 ---
 
