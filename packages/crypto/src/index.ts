@@ -1,5 +1,5 @@
 /**
- * @zkkb/crypto - E2EE cryptographic library
+ * @chatham/crypto - E2EE cryptographic library
  * @packageDocumentation
  */
 

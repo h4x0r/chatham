@@ -4,7 +4,7 @@
  */
 
 import * as Automerge from '@automerge/automerge'
-import type { BoardContent } from '@zkkb/types'
+import type { BoardContent } from '@chatham/types'
 
 /**
  * Create an empty board document

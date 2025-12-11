@@ -1,8 +1,8 @@
-# ZKKB Freemium Model
+# Chatham Freemium Model
 
 ## Overview
 
-ZKKB uses a freemium model where **small team collaboration** is free, and larger teams or power users pay for Pro features. The core value proposition—end-to-end encrypted kanban with zero-knowledge proofs—is never paywalled.
+Chatham uses a freemium model where **small team collaboration** is free, and larger teams or power users pay for Pro features. The core value proposition—end-to-end encrypted kanban with zero-knowledge proofs—is never paywalled.
 
 ## Positioning
 
@@ -93,7 +93,7 @@ ZKKB uses a freemium model where **small team collaboration** is free, and large
 journey
     title User Journey to Conversion
     section Discovery
-      Find ZKKB via privacy community: 5: User
+      Find Chatham via privacy community: 5: User
       Install extension: 4: User
     section Activation
       Create first board: 5: User

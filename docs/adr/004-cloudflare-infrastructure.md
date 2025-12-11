@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ZKKB needs backend infrastructure for:
+Chatham needs backend infrastructure for:
 - Authentication (magic links)
 - Merkle tree storage
 - Encrypted blob storage
@@ -148,7 +148,7 @@ CREATE TABLE sessions (
 
 ```mermaid
 flowchart LR
-    subgraph R2["R2 Bucket: zkkb"]
+    subgraph R2["R2 Bucket: chatham"]
         boards["boards/{id}/data.enc"]
         attachments["attachments/{board_id}/{attachment_id}"]
     end
@@ -248,18 +248,18 @@ pie title Monthly Cost Breakdown (10K MAU)
 ### wrangler.toml
 
 ```toml
-name = "zkkb-api"
+name = "chatham-api"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "zkkb"
+database_name = "chatham"
 database_id = "..." # From wrangler d1 create
 
 [[r2_buckets]]
 binding = "R2"
-bucket_name = "zkkb"
+bucket_name = "chatham"
 
 [[durable_objects.bindings]]
 name = "BOARD_SYNC"

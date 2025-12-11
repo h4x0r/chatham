@@ -232,7 +232,7 @@ Client manages its own encrypted board index stored in `commitment_data`.
 
 ```typescript
 // Derive board list encryption key from seed
-const boardListKey = await hkdf(seed, 'zkkb-board-list')
+const boardListKey = await hkdf(seed, 'chatham-board-list')
 
 // Board list structure (encrypted in R2)
 interface BoardIndex {

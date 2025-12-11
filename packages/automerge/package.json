@@ -1,7 +1,7 @@
 {
-  "name": "@zkkb/automerge",
+  "name": "@chatham/automerge",
   "version": "0.1.0",
-  "description": "Automerge CRDT operations for ZKKB boards",
+  "description": "Automerge CRDT operations for Chatham boards",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,17 +20,17 @@
   },
   "dependencies": {
     "@automerge/automerge": "^2.2.0",
-    "@zkkb/types": "workspace:*"
+    "@chatham/types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"
   },
-  "keywords": ["zkkb", "automerge", "crdt", "sync"],
+  "keywords": ["chatham", "automerge", "crdt", "sync"],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "url": "git+https://github.com/h4x0r/chatham.git",
     "directory": "packages/automerge"
   }
 }

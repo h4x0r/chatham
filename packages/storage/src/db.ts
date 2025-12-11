@@ -5,13 +5,13 @@
 
 import { openDB, deleteDB, type IDBPDatabase } from 'idb'
 
-const DB_NAME = 'zkkb'
+const DB_NAME = 'chatham'
 const DB_VERSION = 1
 
 /**
- * ZKKB IndexedDB schema
+ * Chatham IndexedDB schema
  */
-export interface ZKKBDB {
+export interface ChathamDB {
   identity: {
     key: string
     value: {
@@ -51,15 +51,15 @@ export interface ZKKBDB {
   }
 }
 
-let dbInstance: IDBPDatabase<ZKKBDB> | null = null
+let dbInstance: IDBPDatabase<ChathamDB> | null = null
 
 /**
- * Open the ZKKB IndexedDB database
+ * Open the Chatham IndexedDB database
  */
-export async function openDatabase(): Promise<IDBPDatabase<ZKKBDB>> {
+export async function openDatabase(): Promise<IDBPDatabase<ChathamDB>> {
   if (dbInstance) return dbInstance
 
-  dbInstance = await openDB<ZKKBDB>(DB_NAME, DB_VERSION, {
+  dbInstance = await openDB<ChathamDB>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains('identity')) {
         db.createObjectStore('identity', { keyPath: 'id' })

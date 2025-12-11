@@ -1,6 +1,6 @@
-# @zkkb/crypto
+# @chatham/crypto
 
-End-to-end encryption library for ZKKB (Zero-Knowledge Kanban Board).
+End-to-end encryption library for Chatham.
 
 ## Features
 
@@ -12,7 +12,7 @@ End-to-end encryption library for ZKKB (Zero-Knowledge Kanban Board).
 ## Installation
 
 ```bash
-npm install @zkkb/crypto
+npm install @chatham/crypto
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ npm install @zkkb/crypto
 ### Recovery Phrase
 
 ```typescript
-import { generatePhrase, phraseToSeed, validatePhrase } from '@zkkb/crypto'
+import { generatePhrase, phraseToSeed, validatePhrase } from '@chatham/crypto'
 
 // Generate a new 24-word recovery phrase
 const phrase = generatePhrase()
@@ -36,7 +36,7 @@ if (validatePhrase(phrase)) {
 ### Key Derivation
 
 ```typescript
-import { deriveKeys, phraseToSeed } from '@zkkb/crypto'
+import { deriveKeys, phraseToSeed } from '@chatham/crypto'
 
 const seed = phraseToSeed(phrase)
 const { publicKey, privateKey } = deriveKeys(seed)
@@ -45,7 +45,7 @@ const { publicKey, privateKey } = deriveKeys(seed)
 ### Encryption
 
 ```typescript
-import { generateKey, encrypt, decrypt } from '@zkkb/crypto'
+import { generateKey, encrypt, decrypt } from '@chatham/crypto'
 
 // Generate a random AES-256 key
 const key = await generateKey()
@@ -61,7 +61,7 @@ const decrypted = await decrypt(key, ciphertext, iv)
 ### Key Wrapping
 
 ```typescript
-import { wrapKey, unwrapKey, deriveKeys } from '@zkkb/crypto'
+import { wrapKey, unwrapKey, deriveKeys } from '@chatham/crypto'
 
 // Wrap a board key for a recipient
 const recipient = deriveKeys(recipientSeed)

@@ -4,7 +4,7 @@
  */
 
 import * as Automerge from '@automerge/automerge'
-import type { BoardContent, Card } from '@zkkb/types'
+import type { BoardContent, Card } from '@chatham/types'
 
 /**
  * Add a column to the board

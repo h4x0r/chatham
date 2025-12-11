@@ -1,5 +1,5 @@
 /**
- * @zkkb/storage - IndexedDB storage layer
+ * @chatham/storage - IndexedDB storage layer
  * @packageDocumentation
  */
 

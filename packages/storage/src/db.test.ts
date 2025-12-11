@@ -8,7 +8,7 @@ describe('database', () => {
 
   it('opens database', async () => {
     const db = await openDatabase()
-    expect(db.name).toBe('zkkb')
+    expect(db.name).toBe('chatham')
   })
 
   it('has required object stores', async () => {
@@ -26,12 +26,12 @@ describe('database', () => {
 
   it('clears database and allows reopening', async () => {
     const db1 = await openDatabase()
-    expect(db1.name).toBe('zkkb')
+    expect(db1.name).toBe('chatham')
 
     await clearDatabase()
 
     const db2 = await openDatabase()
-    expect(db2.name).toBe('zkkb')
+    expect(db2.name).toBe('chatham')
     expect(db2).not.toBe(db1)
   })
 })

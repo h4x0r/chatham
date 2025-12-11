@@ -1,5 +1,5 @@
 /**
- * @zkkb/automerge - CRDT operations for boards
+ * @chatham/automerge - CRDT operations for boards
  * @packageDocumentation
  */
 

@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ZKKB needs real-time collaboration where multiple users can edit the same board simultaneously. The system must handle:
+Chatham needs real-time collaboration where multiple users can edit the same board simultaneously. The system must handle:
 - Concurrent edits to the same card
 - Network partitions (offline editing)
 - Merge without conflicts

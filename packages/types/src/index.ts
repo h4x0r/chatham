@@ -1,5 +1,5 @@
 /**
- * @zkkb/types - TypeScript type definitions for ZKKB
+ * @chatham/types - TypeScript type definitions for ZKKB
  * @packageDocumentation
  */
 

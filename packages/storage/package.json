@@ -1,7 +1,7 @@
 {
-  "name": "@zkkb/storage",
+  "name": "@chatham/storage",
   "version": "0.1.0",
-  "description": "IndexedDB storage layer for ZKKB - identity and board persistence",
+  "description": "IndexedDB storage layer for Chatham - identity and board persistence",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,7 @@
     "vitest": "^2.1.0"
   },
   "keywords": [
-    "zkkb",
+    "chatham",
     "indexeddb",
     "storage",
     "offline"
@@ -39,7 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "url": "git+https://github.com/h4x0r/chatham.git",
     "directory": "packages/storage"
   }
 }

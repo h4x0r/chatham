@@ -1,7 +1,7 @@
 {
-  "name": "@zkkb/crypto",
+  "name": "@chatham/crypto",
   "version": "0.1.0",
-  "description": "E2EE cryptographic library for ZKKB - BIP39, AES-256-GCM, X25519",
+  "description": "E2EE cryptographic library for Chatham - BIP39, AES-256-GCM, X25519",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "url": "git+https://github.com/h4x0r/chatham.git",
     "directory": "packages/crypto"
   }
 }

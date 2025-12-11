@@ -22,7 +22,7 @@ export interface KeyPair {
  */
 export function deriveKeys(seed: Uint8Array): KeyPair {
   // Derive private key using HKDF
-  const privateKey = hkdf(sha256, seed.slice(0, 32), undefined, 'zkkb-x25519', 32)
+  const privateKey = hkdf(sha256, seed.slice(0, 32), undefined, 'chatham-x25519', 32)
   const publicKey = x25519.getPublicKey(privateKey)
 
   return { publicKey, privateKey }

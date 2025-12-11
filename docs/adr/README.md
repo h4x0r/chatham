@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-This directory contains Architecture Decision Records (ADRs) for ZKKB.
+This directory contains Architecture Decision Records (ADRs) for Chatham.
 
 ## Index
 
@@ -15,7 +15,7 @@ This directory contains Architecture Decision Records (ADRs) for ZKKB.
 
 ## Key Architectural Concept
 
-ZKKB implements the **Chatham House Model** through ADR-006: email (billing) and commitment (boards) are completely separate domains with no server-side link. See [ADR-006](006-decoupled-identity-architecture.md) for details.
+Chatham implements the **Chatham House Model** through ADR-006: email (billing) and commitment (boards) are completely separate domains with no server-side link. See [ADR-006](006-decoupled-identity-architecture.md) for details.
 
 ## Template
 

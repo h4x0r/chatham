@@ -1,5 +1,5 @@
 /**
- * @zkkb/semaphore - Zero-knowledge proof integration
+ * @chatham/semaphore - Zero-knowledge proof integration
  * @packageDocumentation
  */
 

@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ZKKB needs a licensing strategy that:
+Chatham needs a licensing strategy that:
 1. Allows open source community usage
 2. Protects against competitors forking and competing
 3. Enables monetization through paid features
@@ -128,11 +128,11 @@ flowchart LR
 ```typescript
 // src/lib/crypto/aes.ts
 /**
- * ZKKB Cryptographic Library
+ * Chatham Cryptographic Library
  *
  * SPDX-License-Identifier: MIT
  *
- * This file is part of ZKKB's core cryptographic library,
+ * This file is part of Chatham's core cryptographic library,
  * available under the MIT License.
  */
 ```
@@ -140,9 +140,9 @@ flowchart LR
 ```typescript
 // src/lib/sync/manager.ts
 /**
- * ZKKB Sync Manager
+ * Chatham Sync Manager
  *
- * SPDX-License-Identifier: LicenseRef-ZKKB-Commercial
+ * SPDX-License-Identifier: LicenseRef-Chatham-Commercial
  *
  * This file requires a commercial license for production use.
  * See LICENSE for details.
@@ -152,7 +152,7 @@ flowchart LR
 ### Directory Structure
 
 ```
-zkkb/
+chatham/
 ├── src/
 │   ├── lib/
 │   │   ├── crypto/      # MIT

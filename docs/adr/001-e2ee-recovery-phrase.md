@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ZKKB requires end-to-end encryption where the server cannot access user data. Users need a way to:
+Chatham requires end-to-end encryption where the server cannot access user data. Users need a way to:
 1. Generate cryptographic keys
 2. Recover their identity on new devices
 3. Not manage complex passwords
@@ -45,8 +45,8 @@ flowchart TB
 
 1. **Recovery phrase**: BIP39 generates 24 words from 256 bits of entropy
 2. **Seed**: `PBKDF2(phrase, "mnemonic" + passphrase)` produces 512-bit seed
-3. **Semaphore identity**: `HKDF(seed[0:32], "zkkb-semaphore")` for ZK proofs
-4. **X25519 keypair**: `HKDF(seed[0:32], "zkkb-x25519")` for key wrapping
+3. **Semaphore identity**: `HKDF(seed[0:32], "chatham-semaphore")` for ZK proofs
+4. **X25519 keypair**: `HKDF(seed[0:32], "chatham-x25519")` for key wrapping
 
 ### Cryptographic Choices
 

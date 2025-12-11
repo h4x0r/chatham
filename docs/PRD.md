@@ -1,9 +1,9 @@
-# Product Requirements Document: ZKKB
+# Product Requirements Document: Chatham
 
-**Product Name**: ZKKB (Zero-Knowledge Kanban Board)
+**Product Name**: Chatham
 **Version**: 2.0
 **Last Updated**: 2024-12-11
-**Author**: ZKKB Team
+**Author**: Chatham Team
 **Status**: Accepted
 
 ---
@@ -21,7 +21,7 @@ Existing kanban tools (Trello, Notion, Jira) store user data unencrypted on thei
 
 ### 1.2 Solution
 
-ZKKB is an end-to-end encrypted kanban board implementing the **Chatham House Model**:
+Chatham is an end-to-end encrypted kanban board implementing the **Chatham House Model**:
 
 > "We know you're a paying customer. We cannot know which boards you're in or what you do there."
 
@@ -34,7 +34,7 @@ Key properties:
 
 ### 1.3 The Chatham House Model
 
-Unlike traditional apps where the server knows everything, ZKKB separates identity into two unlinkable domains:
+Unlike traditional apps where the server knows everything, Chatham separates identity into two unlinkable domains:
 
 | Email Domain | Commitment Domain |
 |--------------|-------------------|
@@ -76,7 +76,7 @@ See [ADR-006](adr/006-decoupled-identity-architecture.md) for technical details.
 
 ```mermaid
 mindmap
-  root((ZKKB))
+  root((Chatham))
     Privacy
       E2EE encryption
       ZK membership proofs
@@ -111,7 +111,7 @@ quadrantChart
     Notion: [0.9, 0.2]
     Standard Notes: [0.2, 0.8]
     Obsidian: [0.3, 0.7]
-    ZKKB: [0.75, 0.9]
+    Chatham: [0.75, 0.9]
 ```
 
 ---
@@ -147,7 +147,7 @@ quadrantChart
 
 ### 4.1 Authentication & Identity
 
-ZKKB uses a **decoupled identity model** where email authentication and board operations are completely separate.
+Chatham uses a **decoupled identity model** where email authentication and board operations are completely separate.
 
 #### 4.1.1 Signup Flow
 
@@ -391,11 +391,11 @@ flowchart LR
 
 ```mermaid
 C4Context
-    title ZKKB System Context
+    title Chatham System Context
 
     Person(user, "User", "Privacy-conscious professional")
 
-    System(extension, "ZKKB Extension", "Chrome extension with E2EE kanban")
+    System(extension, "Chatham Extension", "Chrome extension with E2EE kanban")
 
     System_Ext(cloudflare, "Cloudflare Edge", "Workers, D1, R2, Durable Objects")
     System_Ext(email, "Email Service", "Magic link delivery")

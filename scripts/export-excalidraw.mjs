@@ -12,53 +12,58 @@ async function exportExcalidrawToPNG(excalidrawFile, outputFile) {
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
-    viewport: { width: 1920, height: 1080 },
+    viewport: { width: 2400, height: 1600 },
     deviceScaleFactor: 2 // 2x for retina
   });
   const page = await context.newPage();
 
   try {
-    // Load Excalidraw
-    console.log('  Opening excalidraw.com...');
-    await page.goto('https://excalidraw.com', { waitUntil: 'networkidle' });
-
-    // Wait for the app to load
-    await page.waitForSelector('canvas', { timeout: 10000 });
-    await page.waitForTimeout(2000); // Give it a moment to fully load
-
-    // Read the excalidraw JSON file
+    // Load the excalidraw file
     const excalidrawPath = join(projectRoot, 'docs', 'images', excalidrawFile);
-    console.log(`  Loading ${excalidrawPath}...`);
+    console.log(`  Reading ${excalidrawPath}...`);
     const excalidrawData = readFileSync(excalidrawPath, 'utf-8');
+    const sceneData = JSON.parse(excalidrawData);
 
-    // Inject the diagram data directly into Excalidraw's state
-    // This is more reliable than using the file upload UI
-    await page.evaluate((data) => {
-      const parsedData = JSON.parse(data);
-      // Excalidraw stores its data in window.EXCALIDRAW_ASSET_PATH
-      // We need to trigger the import
-      window.postMessage({
-        type: 'excalidraw',
-        payload: {
-          type: 'SCENE_IMPORT',
-          data: parsedData
-        }
-      }, '*');
-    }, excalidrawData);
+    // Encode the scene data for URL
+    const sceneJson = JSON.stringify({
+      type: "excalidraw",
+      version: 2,
+      source: "https://excalidraw.com",
+      elements: sceneData.elements,
+      appState: sceneData.appState || {}
+    });
 
-    await page.waitForTimeout(2000); // Let the diagram render
+    const encodedScene = encodeURIComponent(Buffer.from(sceneJson).toString('base64'));
 
-    // Zoom to fit all elements
-    console.log('  Fitting diagram to view...');
-    await page.keyboard.press('Control+0'); // or Command+0 on Mac
-    await page.waitForTimeout(1000);
+    // Load Excalidraw with the scene data in URL
+    console.log('  Loading scene in Excalidraw...');
+    const url = `https://excalidraw.com/#json=${encodedScene}`;
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
 
-    // Take screenshot of the canvas
-    console.log('  Capturing screenshot...');
+    // Wait for canvas to be ready
+    await page.waitForSelector('canvas', { timeout: 10000 });
+    await page.waitForTimeout(3000); // Give it time to render
+
+    // Get the canvas element
+    console.log('  Capturing diagram...');
     const canvas = await page.locator('canvas').first();
-    const screenshot = await canvas.screenshot({
+
+    // Get canvas bounding box to crop appropriately
+    const box = await canvas.boundingBox();
+
+    if (!box) {
+      throw new Error('Could not get canvas bounding box');
+    }
+
+    // Take screenshot of just the canvas area
+    const screenshot = await page.screenshot({
       type: 'png',
-      scale: 'device' // Use device scale factor (2x)
+      clip: {
+        x: box.x,
+        y: box.y,
+        width: Math.min(box.width, 2400),
+        height: Math.min(box.height, 1600)
+      }
     });
 
     // Save the PNG

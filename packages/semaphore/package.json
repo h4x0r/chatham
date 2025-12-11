@@ -1,7 +1,7 @@
 {
-  "name": "@zkkb/semaphore",
+  "name": "@chatham/semaphore",
   "version": "0.1.0",
-  "description": "Semaphore ZK proof integration for ZKKB anonymous board access",
+  "description": "Semaphore ZK proof integration for Chatham anonymous board access",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,11 +29,11 @@
     "typescript": "^5.9.3",
     "vitest": "^2.1.0"
   },
-  "keywords": ["zkkb", "semaphore", "zero-knowledge", "zkp", "anonymous"],
+  "keywords": ["chatham", "semaphore", "zero-knowledge", "zkp", "anonymous"],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h4x0r/zkkb.git",
+    "url": "git+https://github.com/h4x0r/chatham.git",
     "directory": "packages/semaphore"
   }
 }
