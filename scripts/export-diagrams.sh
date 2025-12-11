@@ -14,7 +14,7 @@ echo "📤 Exporting security-model.d2..."
 d2 docs/images/security-model.d2 docs/images/security-model.png \
   --theme=0 \
   --pad=20 \
-  --scale=2
+  --scale=0.5
 echo "✅ security-model.png"
 echo ""
 
@@ -23,7 +23,7 @@ echo "📤 Exporting chatham-house-model.d2..."
 d2 docs/images/chatham-house-model.d2 docs/images/chatham-house-model.png \
   --theme=0 \
   --pad=20 \
-  --scale=2
+  --scale=0.5
 echo "✅ chatham-house-model.png"
 echo ""
 
