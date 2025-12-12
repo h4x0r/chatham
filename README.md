@@ -57,7 +57,7 @@ Traditional PM tools give vendors full plaintext access to your security team's 
 - Keys never leave browser (test in local-only mode)
 - Vendor breach yields zero plaintext (simulate server compromise)
 
-**Detailed audit instructions:** See "For Security Teams" section below for step-by-step verification (5 min → 30 min → 2 hour tracks).
+**Detailed audit instructions:** See [For Security Teams](#-for-security-teams) section below for step-by-step verification.
 
 **Trust anchors:**
 - MIT-licensed cryptographic packages (auditable by anyone)
