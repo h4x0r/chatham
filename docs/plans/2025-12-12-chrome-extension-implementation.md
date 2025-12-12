@@ -1689,28 +1689,599 @@ Implementation: TanStack Query hooks wrapping BoardRepository"
 
 ---
 
-## Remaining Implementation Phases
+## Phase 8: Sidepanel UI
 
-**Phase 8: Sidepanel UI** (10 tasks)
-- Task 13-15: Sidepanel App shell, BoardList component, QuickBoardView
-- Task 16-17: Board creation dialog, evaluation banner
-- Task 18-22: Card components, drag-drop integration
+### Task 13: Sidepanel App Shell
 
-**Phase 9: Fullpage UI** (12 tasks)
-- Task 23-25: Fullpage App shell, Sidebar, BoardView
-- Task 26-30: Full kanban with dnd-kit, Column components
-- Task 31-34: Card detail modal with all features
+**Files:**
+- Modify: `apps/extension/src/ui/sidepanel/main.tsx`
+- Create: `apps/extension/src/ui/sidepanel/SidepanelApp.tsx`
+- Create: `apps/extension/tests/component/SidepanelApp.test.tsx`
 
-**Phase 10: Advanced Features** (8 tasks)
-- Task 35-37: Attachments (upload/download)
-- Task 38-40: Comments
-- Task 41-42: Labels and filters
+**Step 1: Write failing test**
 
-**Phase 11: Polish** (5 tasks)
-- Task 43: Theme toggle
-- Task 44: Search functionality
-- Task 45: Export data
-- Task 46-47: E2E tests
+Create `apps/extension/tests/component/SidepanelApp.test.tsx`:
+```typescript
+import { describe, test, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { SidepanelApp } from '@/ui/sidepanel/SidepanelApp'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+function renderWithProviders(component: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+  })
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {component}
+    </QueryClientProvider>
+  )
+}
+
+describe('SidepanelApp', () => {
+  test('shows RecoveryPhraseSetup when no phrase exists', () => {
+    renderWithProviders(<SidepanelApp />)
+
+    expect(screen.getByText(/create new recovery phrase/i)).toBeInTheDocument()
+  })
+
+  test('shows BoardList when phrase exists', () => {
+    // Mock auth store to have recovery phrase
+    renderWithProviders(<SidepanelApp hasRecoveryPhrase={true} />)
+
+    expect(screen.getByText(/create board/i)).toBeInTheDocument()
+  })
+})
+```
+
+**Step 2: Run test to verify it fails**
+
+```bash
+pnpm test tests/component/SidepanelApp.test.tsx
+```
+
+Expected: FAIL - "Cannot find module"
+
+**Step 3: Write minimal implementation**
+
+Create `apps/extension/src/ui/sidepanel/SidepanelApp.tsx`:
+```typescript
+import { useAuthStore } from '@/ui/shared/stores/auth-store'
+import { RecoveryPhraseSetup } from '@/ui/shared/components/RecoveryPhraseSetup'
+
+export function SidepanelApp() {
+  const hasRecoveryPhrase = useAuthStore((state) => state.hasRecoveryPhrase)
+
+  if (!hasRecoveryPhrase) {
+    return (
+      <RecoveryPhraseSetup
+        onComplete={(phrase, isEvaluation) => {
+          if (isEvaluation) {
+            useAuthStore.getState().startEvaluationMode()
+          } else {
+            // TODO: Save phrase to chrome.storage
+            useAuthStore.getState().setHasRecoveryPhrase(true)
+          }
+        }}
+      />
+    )
+  }
+
+  return (
+    <div className="p-4">
+      <h1 className="text-lg font-bold mb-4">Chatham</h1>
+      <button className="w-full p-2 border rounded">Create Board</button>
+    </div>
+  )
+}
+```
+
+Modify `apps/extension/src/ui/sidepanel/main.tsx`:
+```typescript
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { SidepanelApp } from './SidepanelApp'
+import '../shared/index.css'
+
+const queryClient = new QueryClient()
+
+createRoot(document.getElementById('sidepanel-root')!).render(
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <SidepanelApp />
+    </QueryClientProvider>
+  </StrictMode>
+)
+```
+
+**Step 4: Run test to verify it passes**
+
+```bash
+pnpm test tests/component/SidepanelApp.test.tsx
+```
+
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add src/ui/sidepanel/SidepanelApp.tsx src/ui/sidepanel/main.tsx tests/component/SidepanelApp.test.tsx
+git commit -m "feat(ui): add sidepanel app shell with conditional rendering
+
+Test: shows RecoveryPhraseSetup when no phrase, shows board list when phrase exists
+Implementation: conditional rendering based on auth store state"
+```
+
+### Task 14: Board List Component
+
+**Files:**
+- Create: `apps/extension/src/ui/shared/components/BoardList.tsx`
+- Create: `apps/extension/tests/component/BoardList.test.tsx`
+
+**Step 1: Write failing test**
+
+Create `apps/extension/tests/component/BoardList.test.tsx`:
+```typescript
+import { describe, test, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { BoardList } from '@/ui/shared/components/BoardList'
+
+describe('BoardList', () => {
+  test('displays empty state when no boards', () => {
+    render(<BoardList boards={[]} onSelect={vi.fn()} onCreate={vi.fn()} />)
+
+    expect(screen.getByText(/no boards yet/i)).toBeInTheDocument()
+    expect(screen.getByText(/create your first board/i)).toBeInTheDocument()
+  })
+
+  test('displays board cards when boards exist', () => {
+    const boards = [
+      { id: '1', name: 'Security Review', cardCount: 5, updatedAt: Date.now() },
+      { id: '2', name: 'Risk Register', cardCount: 3, updatedAt: Date.now() }
+    ]
+
+    render(<BoardList boards={boards} onSelect={vi.fn()} onCreate={vi.fn()} />)
+
+    expect(screen.getByText('Security Review')).toBeInTheDocument()
+    expect(screen.getByText('Risk Register')).toBeInTheDocument()
+    expect(screen.getByText('5 cards')).toBeInTheDocument()
+  })
+
+  test('calls onSelect when board clicked', async () => {
+    const mockSelect = vi.fn()
+    const boards = [{ id: '1', name: 'Test', cardCount: 0, updatedAt: Date.now() }]
+
+    render(<BoardList boards={boards} onSelect={mockSelect} onCreate={vi.fn()} />)
+
+    await userEvent.click(screen.getByText('Test'))
+
+    expect(mockSelect).toHaveBeenCalledWith('1')
+  })
+})
+```
+
+**Step 2: Run test to verify it fails**
+
+```bash
+pnpm test tests/component/BoardList.test.tsx
+```
+
+Expected: FAIL - "Cannot find module"
+
+**Step 3: Write minimal implementation**
+
+Create `apps/extension/src/ui/shared/components/BoardList.tsx`:
+```typescript
+import { Card } from '@/ui/shared/components/ui/card'
+import { Button } from '@/ui/shared/components/ui/button'
+
+interface BoardListItem {
+  id: string
+  name: string
+  cardCount: number
+  updatedAt: number
+}
+
+interface Props {
+  boards: BoardListItem[]
+  onSelect: (boardId: string) => void
+  onCreate: () => void
+}
+
+export function BoardList({ boards, onSelect, onCreate }: Props) {
+  if (boards.length === 0) {
+    return (
+      <div className="p-4 text-center space-y-4">
+        <p className="text-muted-foreground">No boards yet</p>
+        <p className="text-sm">Create your first board to get started</p>
+        <Button onClick={onCreate}>Create Board</Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2 p-2">
+      {boards.map((board) => (
+        <Card
+          key={board.id}
+          className="p-3 cursor-pointer hover:bg-accent"
+          onClick={() => onSelect(board.id)}
+        >
+          <h3 className="font-medium">{board.name}</h3>
+          <p className="text-sm text-muted-foreground">{board.cardCount} cards</p>
+        </Card>
+      ))}
+      <Button onClick={onCreate} variant="outline" className="w-full">
+        Create Board
+      </Button>
+    </div>
+  )
+}
+```
+
+**Step 4: Run test to verify it passes**
+
+```bash
+pnpm test tests/component/BoardList.test.tsx
+```
+
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add src/ui/shared/components/BoardList.tsx tests/component/BoardList.test.tsx
+git commit -m "feat(ui): add BoardList component with empty state
+
+Test: displays empty state, shows boards, handles click
+Implementation: shadcn Card/Button with board list and create action"
+```
+
+### Task 15: Integrate BoardList into Sidepanel
+
+**Files:**
+- Modify: `apps/extension/src/ui/sidepanel/SidepanelApp.tsx`
+- Modify: `apps/extension/tests/component/SidepanelApp.test.tsx`
+
+**Step 1: Write failing test**
+
+Add to `apps/extension/tests/component/SidepanelApp.test.tsx`:
+```typescript
+test('integrates BoardList when phrase exists', async () => {
+  // Mock useBoards hook to return test data
+  vi.mock('@/ui/shared/hooks/useBoards', () => ({
+    useBoards: () => ({
+      data: [{ id: '1', name: 'Test Board', cardCount: 0, updatedAt: Date.now() }],
+      isLoading: false
+    })
+  }))
+
+  renderWithProviders(<SidepanelApp hasRecoveryPhrase={true} />)
+
+  expect(screen.getByText('Test Board')).toBeInTheDocument()
+})
+```
+
+**Step 2: Run test to verify it fails**
+
+```bash
+pnpm test tests/component/SidepanelApp.test.tsx
+```
+
+Expected: FAIL - "Cannot find 'Test Board'"
+
+**Step 3: Write minimal implementation**
+
+Modify `apps/extension/src/ui/sidepanel/SidepanelApp.tsx`:
+```typescript
+import { useState } from 'react'
+import { useAuthStore } from '@/ui/shared/stores/auth-store'
+import { RecoveryPhraseSetup } from '@/ui/shared/components/RecoveryPhraseSetup'
+import { BoardList } from '@/ui/shared/components/BoardList'
+import { useBoards } from '@/ui/shared/hooks/useBoards'
+
+export function SidepanelApp() {
+  const hasRecoveryPhrase = useAuthStore((state) => state.hasRecoveryPhrase)
+  const { data: boards = [], isLoading } = useBoards()
+  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null)
+
+  if (!hasRecoveryPhrase) {
+    return (
+      <RecoveryPhraseSetup
+        onComplete={(phrase, isEvaluation) => {
+          if (isEvaluation) {
+            useAuthStore.getState().startEvaluationMode()
+          } else {
+            // TODO: Save phrase to chrome.storage
+            useAuthStore.getState().setHasRecoveryPhrase(true)
+          }
+        }}
+      />
+    )
+  }
+
+  if (isLoading) {
+    return <div className="p-4">Loading...</div>
+  }
+
+  return (
+    <div className="h-full flex flex-col">
+      <BoardList
+        boards={boards}
+        onSelect={setSelectedBoardId}
+        onCreate={() => {
+          // TODO: Open create board dialog
+        }}
+      />
+    </div>
+  )
+}
+```
+
+**Step 4: Run test to verify it passes**
+
+```bash
+pnpm test tests/component/SidepanelApp.test.tsx
+```
+
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add src/ui/sidepanel/SidepanelApp.tsx tests/component/SidepanelApp.test.tsx
+git commit -m "feat(ui): integrate BoardList into sidepanel app
+
+Test: displays boards from useBoards hook
+Implementation: connects BoardList component with TanStack Query data"
+```
+
+---
+
+## Phase 9: Fullpage UI
+
+### Task 16: Fullpage App Shell
+
+**Files:**
+- Modify: `apps/extension/src/ui/fullpage/main.tsx`
+- Create: `apps/extension/src/ui/fullpage/FullpageApp.tsx`
+- Create: `apps/extension/tests/component/FullpageApp.test.tsx`
+
+**Step 1: Write failing test**
+
+Create `apps/extension/tests/component/FullpageApp.test.tsx`:
+```typescript
+import { describe, test, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { FullpageApp } from '@/ui/fullpage/FullpageApp'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+function renderWithProviders(component: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+  })
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {component}
+    </QueryClientProvider>
+  )
+}
+
+describe('FullpageApp', () => {
+  test('shows RecoveryPhraseSetup when no phrase exists', () => {
+    renderWithProviders(<FullpageApp />)
+
+    expect(screen.getByText(/create new recovery phrase/i)).toBeInTheDocument()
+  })
+
+  test('shows sidebar and main content when phrase exists', () => {
+    renderWithProviders(<FullpageApp hasRecoveryPhrase={true} />)
+
+    expect(screen.getByRole('complementary')).toBeInTheDocument() // Sidebar
+    expect(screen.getByRole('main')).toBeInTheDocument() // Main content
+  })
+})
+```
+
+**Step 2: Run test to verify it fails**
+
+```bash
+pnpm test tests/component/FullpageApp.test.tsx
+```
+
+Expected: FAIL - "Cannot find module"
+
+**Step 3: Write minimal implementation**
+
+Create `apps/extension/src/ui/fullpage/FullpageApp.tsx`:
+```typescript
+import { useAuthStore } from '@/ui/shared/stores/auth-store'
+import { RecoveryPhraseSetup } from '@/ui/shared/components/RecoveryPhraseSetup'
+
+export function FullpageApp() {
+  const hasRecoveryPhrase = useAuthStore((state) => state.hasRecoveryPhrase)
+
+  if (!hasRecoveryPhrase) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="w-full max-w-md">
+          <RecoveryPhraseSetup
+            onComplete={(phrase, isEvaluation) => {
+              if (isEvaluation) {
+                useAuthStore.getState().startEvaluationMode()
+              } else {
+                // TODO: Save phrase
+                useAuthStore.getState().setHasRecoveryPhrase(true)
+              }
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="h-screen flex">
+      <aside role="complementary" className="w-64 border-r p-4">
+        <h2 className="text-lg font-bold">Sidebar</h2>
+      </aside>
+      <main role="main" className="flex-1 p-4">
+        <h1 className="text-2xl font-bold">Main Content</h1>
+      </main>
+    </div>
+  )
+}
+```
+
+Modify `apps/extension/src/ui/fullpage/main.tsx`:
+```typescript
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { FullpageApp } from './FullpageApp'
+import '../shared/index.css'
+
+const queryClient = new QueryClient()
+
+createRoot(document.getElementById('fullpage-root')!).render(
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <FullpageApp />
+    </QueryClientProvider>
+  </StrictMode>
+)
+```
+
+**Step 4: Run test to verify it passes**
+
+```bash
+pnpm test tests/component/FullpageApp.test.tsx
+```
+
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add src/ui/fullpage/FullpageApp.tsx src/ui/fullpage/main.tsx tests/component/FullpageApp.test.tsx
+git commit -m "feat(ui): add fullpage app shell with sidebar layout
+
+Test: conditional rendering based on recovery phrase, shows sidebar and main
+Implementation: two-column layout (sidebar + main content)"
+```
+
+### Task 17: Evaluation Mode Banner Component
+
+**Files:**
+- Create: `apps/extension/src/ui/shared/components/EvaluationBanner.tsx`
+- Create: `apps/extension/tests/component/EvaluationBanner.test.tsx`
+
+**Step 1: Write failing test**
+
+Create `apps/extension/tests/component/EvaluationBanner.test.tsx`:
+```typescript
+import { describe, test, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { EvaluationBanner } from '@/ui/shared/components/EvaluationBanner'
+
+describe('EvaluationBanner', () => {
+  test('displays warning and cards remaining', () => {
+    render(<EvaluationBanner cardsRemaining={7} onCreatePhrase={vi.fn()} />)
+
+    expect(screen.getByText(/evaluation mode/i)).toBeInTheDocument()
+    expect(screen.getByText(/data will be lost/i)).toBeInTheDocument()
+    expect(screen.getByText(/7\/10 cards/i)).toBeInTheDocument()
+  })
+
+  test('calls onCreatePhrase when button clicked', async () => {
+    const mockCreate = vi.fn()
+    render(<EvaluationBanner cardsRemaining={5} onCreatePhrase={mockCreate} />)
+
+    await userEvent.click(screen.getByText(/create recovery phrase/i))
+
+    expect(mockCreate).toHaveBeenCalled()
+  })
+})
+```
+
+**Step 2: Run test to verify it fails**
+
+```bash
+pnpm test tests/component/EvaluationBanner.test.tsx
+```
+
+Expected: FAIL - "Cannot find module"
+
+**Step 3: Write minimal implementation**
+
+Create `apps/extension/src/ui/shared/components/EvaluationBanner.tsx`:
+```typescript
+import { Button } from '@/ui/shared/components/ui/button'
+
+interface Props {
+  cardsRemaining: number
+  onCreatePhrase: () => void
+}
+
+export function EvaluationBanner({ cardsRemaining, onCreatePhrase }: Props) {
+  return (
+    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-medium text-yellow-800">⚠️ Evaluation Mode</p>
+          <p className="text-sm text-yellow-700">Data will be lost on close</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium">{cardsRemaining}/10 cards</span>
+          <Button size="sm" onClick={onCreatePhrase}>
+            Create Recovery Phrase
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+**Step 4: Run test to verify it passes**
+
+```bash
+pnpm test tests/component/EvaluationBanner.test.tsx
+```
+
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add src/ui/shared/components/EvaluationBanner.tsx tests/component/EvaluationBanner.test.tsx
+git commit -m "feat(ui): add evaluation mode banner component
+
+Test: displays warning and cards remaining, handles create phrase click
+Implementation: yellow warning banner with card counter and CTA button"
+```
+
+---
+
+## Remaining Tasks (18-47) - Summary
+
+Due to the large scope of the remaining implementation (30 more tasks), I recommend:
+
+**Option A:** Continue expanding each task in detail (will require significant document size)
+
+**Option B:** Create task groups with shared patterns and let subagents follow the established TDD pattern from Tasks 1-17
+
+**Option C:** Pause plan expansion and begin implementing Tasks 13-17 (which are now detailed), then expand remaining tasks as needed
+
+The current plan provides:
+- ✅ Tasks 1-12: Fully detailed (COMPLETED)
+- ✅ Tasks 13-16: Fully detailed (READY TO IMPLEMENT)
+- ⏸️ Tasks 17-47: High-level summaries only
+
+Would you like me to continue with full detail for all 30 remaining tasks, or implement Tasks 13-16 first?
 
 ---
 
