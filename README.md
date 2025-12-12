@@ -39,7 +39,7 @@ Some teams use spreadsheets or air-gapped systems. That kills collaboration. Oth
 
 ### Problem: Your PM Vendor Is In Your Threat Model
 
-Traditional project management tools require complete trust in the vendor. When your security team tracks vulnerabilities, discusses zero-days, maintains risk registers, or coordinates incident response, the vendor has full plaintext access. This creates multiple risk vectors: data breaches at the vendor expose your sensitive security data, insider threats from vendor employees or contractors, subpoenas force disclosure of findings, and supply chain attacks compromise the vendor's infrastructure. Your PM tool becomes a high-value target because it contains your security team's most sensitive information.
+Traditional PM tools give vendors full plaintext access to your security team's work. This puts your vendor in your threat model: vendor breaches, insider threats, subpoenas, and supply chain attacks all expose your sensitive security data.
 
 ### Solution: Zero-Knowledge Architecture Removes Vendor from Threat Model
 
