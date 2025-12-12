@@ -16,7 +16,7 @@
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-features">Features</a> •
   <a href="#-how-it-works">How It Works</a> •
-  <a href="#️-the-chatham-house-model">Chatham House</a> •
+  <a href="#-for-security-teams">Security</a> •
   <a href="#-pricing">Pricing</a>
 </p>
 
