@@ -36,7 +36,7 @@ Some teams use spreadsheets or air-gapped systems. That kills collaboration. Oth
 
 ## 📋 CISO Brief
 
-> **Recommended by ex-Deloitte risk advisory director and ex-IBM global security architect**
+> **Architected and designed by Albert Hui, ex-Deloitte risk advisory director and ex-IBM global security architect**
 
 ### Problem: Your PM Vendor Is In Your Threat Model
 
