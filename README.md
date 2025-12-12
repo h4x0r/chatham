@@ -229,160 +229,6 @@ pnpm build
 # 4. Select the dist/ folder
 ```
 
----
-
-## 📦 Open Source Packages
-
-The cryptographic foundation is **MIT licensed** and fully auditable:
-
-| Package | Description | NPM |
-|---------|-------------|-----|
-| **[@chatham/crypto](packages/crypto)** | E2EE primitives: BIP-39 phrases, AES-256-GCM, X25519 ECDH | [![npm](https://img.shields.io/npm/v/@chatham/crypto?style=flat-square)](https://npmjs.com/package/@chatham/crypto) |
-| **[@chatham/semaphore](packages/semaphore)** | Semaphore ZK proof generation & verification | [![npm](https://img.shields.io/npm/v/@chatham/semaphore?style=flat-square)](https://npmjs.com/package/@chatham/semaphore) |
-| **[@chatham/automerge](packages/automerge)** | CRDT operations for kanban boards | [![npm](https://img.shields.io/npm/v/@chatham/automerge?style=flat-square)](https://npmjs.com/package/@chatham/automerge) |
-| **[@chatham/storage](packages/storage)** | IndexedDB persistence layer | [![npm](https://img.shields.io/npm/v/@chatham/storage?style=flat-square)](https://npmjs.com/package/@chatham/storage) |
-| **[@chatham/types](packages/types)** | TypeScript definitions | [![npm](https://img.shields.io/npm/v/@chatham/types?style=flat-square)](https://npmjs.com/package/@chatham/types) |
-
-### Code Examples
-
-<details>
-<summary><strong>Generate Recovery Phrase & Derive Keys</strong></summary>
-
-```typescript
-import { generatePhrase, phraseToSeed } from '@chatham/crypto'
-import { deriveKeyPair } from '@chatham/crypto'
-
-// Generate a new 24-word recovery phrase
-const phrase = generatePhrase()
-// "abandon ability able about above absent absorb abstract..."
-
-// Derive cryptographic keys from the phrase
-const seed = await phraseToSeed(phrase)
-const { publicKey, privateKey } = await deriveKeyPair(seed)
-```
-
-</details>
-
-<details>
-<summary><strong>Encrypt & Decrypt Data</strong></summary>
-
-```typescript
-import { generateKey, encrypt, decrypt, exportKey, importKey } from '@chatham/crypto'
-
-// Generate a board encryption key
-const boardKey = await generateKey()
-
-// Encrypt sensitive data
-const plaintext = new TextEncoder().encode('Secret project details')
-const ciphertext = await encrypt(boardKey, plaintext)
-
-// Later, decrypt
-const decrypted = await decrypt(boardKey, ciphertext)
-const text = new TextDecoder().decode(decrypted)
-// "Secret project details"
-```
-
-</details>
-
-<details>
-<summary><strong>Generate Zero-Knowledge Membership Proof</strong></summary>
-
-```typescript
-import { identityFromSeed, createGroup, addMember, generateProof, verifyProof } from '@chatham/semaphore'
-
-// Create ZK identity from your seed
-const identity = await identityFromSeed(seed)
-
-// Board owner creates a group and adds members
-const group = createGroup()
-addMember(group, identity.commitment)
-addMember(group, otherMember.commitment)
-
-// Prove you're in the group WITHOUT revealing which member you are
-const proof = await generateProof(
-  identity,
-  group,
-  boardId,  // external nullifier
-  Date.now() // message (for uniqueness)
-)
-
-// Server verifies the proof
-const isValid = await verifyProof(proof, group.root)
-// true - but server doesn't know WHO you are
-```
-
-</details>
-
----
-
-## 🧪 Test Coverage
-
-**303 tests passing**
-
-<table>
-<thead>
-<tr>
-<th>Package</th>
-<th align="center">Tests</th>
-<th>Coverage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>@chatham/crypto</code></td>
-<td align="center">24</td>
-<td>Phrase, AES, X25519</td>
-</tr>
-<tr>
-<td><code>@chatham/storage</code></td>
-<td align="center">10</td>
-<td>IndexedDB operations</td>
-</tr>
-<tr>
-<td><code>@chatham/semaphore</code></td>
-<td align="center">24</td>
-<td>Identity, Group, Proof</td>
-</tr>
-<tr>
-<td><code>@chatham/automerge</code></td>
-<td align="center">31</td>
-<td>Schema, Operations</td>
-</tr>
-<tr>
-<td><code>chatham-api</code></td>
-<td align="center">65</td>
-<td>Routes, Middleware, DO</td>
-</tr>
-<tr>
-<td><code>chatham-extension</code></td>
-<td align="center">130</td>
-<td>Components, State, API</td>
-</tr>
-<tr>
-<td><code>E2E (Playwright)</code></td>
-<td align="center">19</td>
-<td>Auth, Navigation, A11y</td>
-</tr>
-</tbody>
-</table>
-
----
-
-## 📚 Documentation
-
-| Document | Description |
-|----------|-------------|
-| [Product Requirements](docs/PRD.md) | Full product specification |
-| [Freemium Model](docs/FREEMIUM.md) | Business model details |
-| [ADR-001: E2EE](docs/adr/001-e2ee-recovery-phrase.md) | Why BIP-39 + AES-256-GCM |
-| [ADR-002: ZK Proofs](docs/adr/002-semaphore-zk-proofs.md) | Why Semaphore for anonymity |
-| [ADR-003: CRDTs](docs/adr/003-automerge-crdt.md) | Why Automerge for sync |
-| [ADR-004: Infrastructure](docs/adr/004-cloudflare-infrastructure.md) | Why Cloudflare edge |
-| [ADR-005: Licensing](docs/adr/005-dual-licensing.md) | Open core model |
-| [ADR-006: Decoupled Identity](docs/adr/006-decoupled-identity-architecture.md) | Email ≠ Boards privacy |
-
----
-
 ## 👁️ The Chatham House Model
 
 **We know you're a paying customer. We cannot know which boards you're in.**
@@ -868,7 +714,104 @@ export async function generateProof(
 - While Chatham currently uses classical crypto, we're monitoring PQC standards
 - https://csrc.nist.gov/projects/post-quantum-cryptography
 
+## Open Source Packages
+
+The cryptographic foundation is **MIT licensed** and fully auditable:
+
+| Package | Description | NPM |
+|---------|-------------|-----|
+| **[@chatham/crypto](packages/crypto)** | E2EE primitives: BIP-39 phrases, AES-256-GCM, X25519 ECDH | [![npm](https://img.shields.io/npm/v/@chatham/crypto?style=flat-square)](https://npmjs.com/package/@chatham/crypto) |
+| **[@chatham/semaphore](packages/semaphore)** | Semaphore ZK proof generation & verification | [![npm](https://img.shields.io/npm/v/@chatham/semaphore?style=flat-square)](https://npmjs.com/package/@chatham/semaphore) |
+| **[@chatham/automerge](packages/automerge)** | CRDT operations for kanban boards | [![npm](https://img.shields.io/npm/v/@chatham/automerge?style=flat-square)](https://npmjs.com/package/@chatham/automerge) |
+| **[@chatham/storage](packages/storage)** | IndexedDB persistence layer | [![npm](https://img.shields.io/npm/v/@chatham/storage?style=flat-square)](https://npmjs.com/package/@chatham/storage) |
+| **[@chatham/types](packages/types)** | TypeScript definitions | [![npm](https://img.shields.io/npm/v/@chatham/types?style=flat-square)](https://npmjs.com/package/@chatham/types) |
+
+### Code Examples
+
+<details>
+<summary><strong>Generate Recovery Phrase & Derive Keys</strong></summary>
+
+```typescript
+import { generatePhrase, phraseToSeed } from '@chatham/crypto'
+import { deriveKeyPair } from '@chatham/crypto'
+
+// Generate a new 24-word recovery phrase
+const phrase = generatePhrase()
+// "abandon ability able about above absent absorb abstract..."
+
+// Derive cryptographic keys from the phrase
+const seed = await phraseToSeed(phrase)
+const { publicKey, privateKey } = await deriveKeyPair(seed)
+```
+
 </details>
+
+<details>
+<summary><strong>Encrypt & Decrypt Data</strong></summary>
+
+```typescript
+import { generateKey, encrypt, decrypt, exportKey, importKey } from '@chatham/crypto'
+
+// Generate a board encryption key
+const boardKey = await generateKey()
+
+// Encrypt sensitive data
+const plaintext = new TextEncoder().encode('Secret project details')
+const ciphertext = await encrypt(boardKey, plaintext)
+
+// Later, decrypt
+const decrypted = await decrypt(boardKey, ciphertext)
+const text = new TextDecoder().decode(decrypted)
+// "Secret project details"
+```
+
+</details>
+
+<details>
+<summary><strong>Generate Zero-Knowledge Membership Proof</strong></summary>
+
+```typescript
+import { identityFromSeed, createGroup, addMember, generateProof, verifyProof } from '@chatham/semaphore'
+
+// Create ZK identity from your seed
+const identity = await identityFromSeed(seed)
+
+// Board owner creates a group and adds members
+const group = createGroup()
+addMember(group, identity.commitment)
+addMember(group, otherMember.commitment)
+
+// Prove you're in the group WITHOUT revealing which member you are
+const proof = await generateProof(
+  identity,
+  group,
+  boardId,  // external nullifier
+  Date.now() // message (for uniqueness)
+)
+
+// Server verifies the proof
+const isValid = await verifyProof(proof, group.root)
+// true - but server doesn't know WHO you are
+```
+
+</details>
+
+</details>
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Product Requirements](docs/PRD.md) | Full product specification |
+| [Freemium Model](docs/FREEMIUM.md) | Business model details |
+| [ADR-001: E2EE](docs/adr/001-e2ee-recovery-phrase.md) | Why BIP-39 + AES-256-GCM |
+| [ADR-002: ZK Proofs](docs/adr/002-semaphore-zk-proofs.md) | Why Semaphore for anonymity |
+| [ADR-003: CRDTs](docs/adr/003-automerge-crdt.md) | Why Automerge for sync |
+| [ADR-004: Infrastructure](docs/adr/004-cloudflare-infrastructure.md) | Why Cloudflare edge |
+| [ADR-005: Licensing](docs/adr/005-dual-licensing.md) | Open core model |
+| [ADR-006: Decoupled Identity](docs/adr/006-decoupled-identity-architecture.md) | Email ≠ Boards privacy |
 
 ---
 
