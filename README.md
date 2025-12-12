@@ -28,8 +28,6 @@ Your red team discusses zero-days in [redacted]. Your vendor, their contractors,
 
 Some teams use spreadsheets or air-gapped systems. That kills collaboration. Others accept the risk. Both are bad options.
 
-**Chatham uses AES-256-GCM encryption and Semaphore ZK-SNARKs.** We can't see your data because we never have the keys.
-
 **The server knows who's in the room — but can't see what's discussed or who said what.** Your edits are anonymous, your content is encrypted, your activity is untraceable.
 
 ---
