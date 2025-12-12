@@ -779,8 +779,6 @@ const isValid = await verifyProof(proof, group.root)
 
 We welcome contributions to the open-source packages! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-**Security issues?** Email security@chatham.one (PGP key available)
-
 ---
 
 ## 📜 License
