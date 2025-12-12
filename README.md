@@ -500,8 +500,17 @@ We welcome contributions to the open-source packages! See [CONTRIBUTING.md](CONT
 
 ## 📜 License
 
-- **Crypto packages** (`packages/*`): [MIT License](LICENSE)
-- **Application** (`chatham-pro/*`): Proprietary
+Dual Licensed: MIT + Commercial
+
+- **This repository** (`chatham`): [MIT License](LICENSE)
+  - Crypto packages (`packages/*`)
+  - Local-only application features (UI, storage, encryption)
+
+- **Cloud features** (private `chatham-pro` repository): Commercial License
+  - Cloud sync, collaboration, backend API
+  - Free tier: ≤5 users, ≤$1M revenue
+
+See [ADR-005](docs/adr/005-dual-licensing.md) for details.
 
 ---
 
