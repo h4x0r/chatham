@@ -234,12 +234,12 @@
       "locked": false,
       "fontSize": 28,
       "fontFamily": 2,
-      "text": "Only 📱 your\ndevice\nknows both",
+      "text": "📱 Only your\ndevice\nknows both",
       "baseline": 86,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Only 📱 your\ndevice\nknows both"
+      "originalText": "📱 Only your\ndevice\nknows both"
     },
     {
       "type": "rectangle",
