@@ -22,26 +22,17 @@
 
 ---
 
-## The Problem
+## Your Vulnerability Tracker Shouldn't Be Your Biggest Vulnerability
 
 Your red team discusses zero-days in [redacted]. Your vendor, their contractors, and their subpoena compliance team can all see it.
 
-The same goes for your vulnerability register, incident timelines, risk assessments, and breach post-mortems. All plaintext to your PM vendor.
-
-**Current workarounds don't work:**
-- Spreadsheets kill collaboration and create shadow IT
-- Air-gapped systems prevent real-time coordination
-- "Accepting the risk" puts your vendor in your threat model
-
-## The Solution
+Some teams use spreadsheets or air-gapped systems. That kills collaboration. Others accept the risk. Both are bad options.
 
 **Chatham uses AES-256-GCM encryption and Semaphore ZK-SNARKs.** We can't see your data because we never have the keys.
 
-<p align="center">
-  <img src="docs/images/chatham-house-model.png" alt="Chatham House Model" width="800" />
-</p>
-
-**The server knows who's in the room — but can't see what's discussed or who said what.** Your edits are anonymous, your content is encrypted, your activity is untraceable.
+| What Vendor Sees | Traditional PM Tools | Chatham |
+|------------------|---------------------|---------|
+| **Your data** | ✅ Everything plaintext | ❌ Encrypted blobs + ZK proofs |
 
 ---
 
