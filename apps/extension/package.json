@@ -15,6 +15,7 @@
   "dependencies": {
     "@chatham/automerge": "workspace:*",
     "@chatham/crypto": "workspace:*",
+    "@chatham/semaphore": "workspace:*",
     "@chatham/storage": "workspace:*",
     "@chatham/types": "workspace:*",
     "@dnd-kit/core": "^6.1.0",
